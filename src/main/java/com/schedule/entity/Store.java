@@ -7,6 +7,7 @@ import lombok.Data;
  * @create 2023-01-09-22:25
  */
 @Data
+@Table
 public class tStore {
 
     private Long id;

@@ -1,6 +1,6 @@
 package com.schedule.controller;
 
-import com.schedule.entity.tStaff;
+import com.schedule.entity.Staff;
 import com.schedule.service.tStaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class tStaffController {
      * @param tstaff
      */
     @PostMapping("/add")
-    public void add(@RequestBody tStaff tstaff){
+    public void add(@RequestBody Staff tstaff){
         tstaffService.save(tstaff);
 
     }
@@ -33,7 +33,7 @@ public class tStaffController {
      * @param tstaff
      */
     @PutMapping
-    public void updata(@RequestBody tStaff tstaff) {
+    public void updata(@RequestBody Staff tstaff) {
 
         tstaffService.updateById(tstaff);
 
@@ -55,9 +55,9 @@ public class tStaffController {
      * @return
      */
     @GetMapping("/{id}")
-    public tStaff get(@PathVariable Long id) {
+    public Staff get(@PathVariable Long id) {
 
-        tStaff tstaff = tstaffService.getById(id);
+        Staff tstaff = tstaffService.getById(id);
 
         return tstaff;
     }
@@ -68,8 +68,8 @@ public class tStaffController {
      * @return
      */
     @GetMapping("/getAll")
-    public List<tStaff> getAll(){
-        List<tStaff> list = tstaffService.list();
+    public List<Staff> getAll(){
+        List<Staff> list = tstaffService.list();
         return list;
     }
 }
