@@ -1,7 +1,7 @@
 package com.schedule.controller;
 
 import com.schedule.entity.Staff;
-import com.schedule.service.tStaffService;
+import com.schedule.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,59 +12,57 @@ import java.util.List;
  * @create 2023-01-09-23:36
  */
 @RestController
-@RequestMapping("/tstaff")
-public class tStaffController {
+@RequestMapping("/staff")
+public class StaffController {
 
     @Autowired
-    private tStaffService tstaffService;
+    private StaffService tstaffService;
 
     /**
-     * 添加
-     * @param tstaff
+     * 添加员工
+     * @param staff
      */
     @PostMapping("/add")
-    public void add(@RequestBody Staff tstaff){
-        tstaffService.save(tstaff);
+    public void add(@RequestBody Staff staff){
+        tstaffService.save(staff);
 
     }
 
     /**
-     * 删除
-     * @param tstaff
+     * 更新员工数据
+     * @param staff
      */
     @PutMapping
-    public void updata(@RequestBody Staff tstaff) {
+    public void updata(@RequestBody Staff staff) {
 
-        tstaffService.updateById(tstaff);
+        tstaffService.updateById(staff);
 
     }
 
     /**
-     * 删除
+     * 删除员工
      * @param ids
      */
     @DeleteMapping
     public void delete(@RequestParam List<Long> ids) {
         tstaffService.removeByIds(ids);
-
     }
 
     /**
-     * 根据id获取单条
+     * 根据id获取单条数据
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     public Staff get(@PathVariable Long id) {
 
-        Staff tstaff = tstaffService.getById(id);
+        Staff staff = tstaffService.getById(id);
 
-        return tstaff;
+        return staff;
     }
 
-
     /**
-     * 获取所有数据
+     * 获取员工所有数据
      * @return
      */
     @GetMapping("/getAll")

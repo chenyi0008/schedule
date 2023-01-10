@@ -2,8 +2,8 @@ package com.schedule.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.schedule.entity.Staff;
-import com.schedule.mapper.tStaffMapper;
-import com.schedule.service.tStaffService;
+import com.schedule.mapper.StaffMapper;
+import com.schedule.service.StaffService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Service;
  * @create 2023-01-09-23:34
  */
 @Service
-public class tStaffServiceImpl extends ServiceImpl<tStaffMapper, Staff> implements tStaffService {
+public class StaffServiceImpl extends ServiceImpl<StaffMapper, Staff> implements StaffService {
 }

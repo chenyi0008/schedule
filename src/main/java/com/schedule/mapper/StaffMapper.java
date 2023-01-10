@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @create 2023-01-09-23:33
  */
 @Mapper
-public interface tStaffMapper extends BaseMapper<Staff> {
+public interface StaffMapper extends BaseMapper<Staff> {
 }

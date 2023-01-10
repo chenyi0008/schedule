@@ -2,7 +2,6 @@ package com.schedule.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.Value;
 
 /**
  * @author akuya

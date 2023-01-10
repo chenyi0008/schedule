@@ -1,7 +1,7 @@
 package com.schedule.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.schedule.entity.tStore;
+import com.schedule.entity.Store;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @create 2023-01-09-22:48
  */
 @Mapper
-public interface tStoreMapper extends BaseMapper<tStore> {
+public interface StoreMapper extends BaseMapper<Store> {
 }
