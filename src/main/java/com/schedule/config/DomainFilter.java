@@ -1,7 +1,4 @@
 package com.schedule.config;
-
-
-
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.*;
