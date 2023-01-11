@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * store
  * @author akuya
  * @create 2023-01-09-22:52
  */
