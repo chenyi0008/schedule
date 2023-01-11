@@ -1,5 +1,7 @@
 package com.schedule.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.schedule.common.R;
 import com.schedule.entity.Staff;
 import com.schedule.service.StaffService;
@@ -77,16 +79,19 @@ public class StaffController {
      * @param page
      * @param pageSize
      * @param staffName
-     * @param StoreName
+     * @param storeId
      * @return
      */
     @GetMapping("/page")
-    public List<Staff> page(int page,int pageSize,String staffName,String StoreName){
-
-        return null;
+    public R<Page> page(int page,int pageSize,String staffName,String storeId){
+        //分页构造器
+        Page<Staff> pageInfo = new Page<>(page,pageSize);
+        //条件构造器
+        LambdaQueryWrapper<Staff> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(staffName != null, Staff::getName, staffName);
+        queryWrapper.eq(storeId != null, Staff::getStoreId, storeId);
+        Page<Staff> list = staffService.page(pageInfo, queryWrapper);
+        return R.success(list);
     }
-
-
-
 
 }
