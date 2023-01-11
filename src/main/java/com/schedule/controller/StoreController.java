@@ -1,5 +1,6 @@
 package com.schedule.controller;
 
+import com.schedule.common.R;
 import com.schedule.entity.Store;
 import com.schedule.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,9 @@ public class StoreController {
      * 添加店铺
      */
     @PostMapping
-    public void add(@RequestBody Store store){
+    public R<String> add(@RequestBody Store store){
         storeService.save(store);
+        return R.success("添加成功");
     }
 
     /**
@@ -30,10 +32,10 @@ public class StoreController {
      * @param store
      */
     @PutMapping
-    public void updata(@RequestBody Store store) {
+    public R<String> updata(@RequestBody Store store) {
 
         storeService.updateById(store);
-
+        return R.success("更新成功");
     }
 
     /**
@@ -41,9 +43,9 @@ public class StoreController {
      * @param ids
      */
     @DeleteMapping
-    public void delete(@RequestParam List<Long> ids) {
+    public R<String> delete(@RequestParam List<Long> ids) {
         storeService.removeByIds(ids);
-
+        return R.success("删除成功");
     }
 
 
@@ -53,11 +55,11 @@ public class StoreController {
      * @return
      */
     @GetMapping("/{id}")
-    public Store get(@PathVariable Long id) {
+    public R<Store> get(@PathVariable Long id) {
 
         Store store = storeService.getById(id);
 
-        return store;
+        return R.success(store);
     }
 
 
@@ -67,9 +69,9 @@ public class StoreController {
      * @return
      */
     @GetMapping("/getAll")
-    public List<Store> getAll(){
+    public R<List<Store>> getAll(){
         List<Store> list = storeService.list();
-        return list;
+        return R.success(list);
     }
 
 

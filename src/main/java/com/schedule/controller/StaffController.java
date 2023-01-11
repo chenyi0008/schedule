@@ -1,5 +1,6 @@
 package com.schedule.controller;
 
+import com.schedule.common.R;
 import com.schedule.entity.Staff;
 import com.schedule.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class StaffController {
      * @param staff
      */
     @PostMapping("/add")
-    public void add(@RequestBody Staff staff){
+    public R<String> add(@RequestBody Staff staff){
         staffService.save(staff);
-
+        return R.success("添加成功");
     }
 
     /**
@@ -33,10 +34,9 @@ public class StaffController {
      * @param staff
      */
     @PutMapping
-    public void updata(@RequestBody Staff staff) {
-
+    public R<String> updata(@RequestBody Staff staff) {
         staffService.updateById(staff);
-
+        return R.success("更新员工数据成功");
     }
 
     /**
@@ -44,8 +44,9 @@ public class StaffController {
      * @param ids
      */
     @DeleteMapping
-    public void delete(@RequestParam List<Long> ids) {
+    public R<String> delete(@RequestParam List<Long> ids) {
         staffService.removeByIds(ids);
+        return R.success("删除成功");
     }
 
     /**
@@ -54,11 +55,11 @@ public class StaffController {
      * @return
      */
     @GetMapping("/{id}")
-    public Staff get(@PathVariable Long id) {
+    public R<Staff> get(@PathVariable Long id) {
 
         Staff staff = staffService.getById(id);
 
-        return staff;
+        return R.success(staff);
     }
 
     /**
@@ -66,8 +67,26 @@ public class StaffController {
      * @return
      */
     @GetMapping("/getAll")
-    public List<Staff> getAll(){
+    public R<List<Staff>> getAll(){
         List<Staff> list = staffService.list();
-        return list;
+        return R.success(list);
     }
+
+    /**
+     * 条件分页查询
+     * @param page
+     * @param pageSize
+     * @param staffName
+     * @param StoreName
+     * @return
+     */
+    @GetMapping("/page")
+    public List<Staff> page(int page,int pageSize,String staffName,String StoreName){
+
+        return null;
+    }
+
+
+
+
 }
