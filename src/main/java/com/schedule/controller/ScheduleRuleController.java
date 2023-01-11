@@ -1,5 +1,6 @@
 package com.schedule.controller;
 
+import com.schedule.common.R;
 import com.schedule.entity.PreferenceStaff;
 import com.schedule.entity.ScheduleRule;
 import com.schedule.service.ScheduleRuleService;
@@ -24,9 +25,9 @@ public class ScheduleRuleController {
      * @param scheduleRule
      */
     @PostMapping("/add")
-    public void add(@RequestBody ScheduleRule scheduleRule){
+    public R<String> add(@RequestBody ScheduleRule scheduleRule){
         scheduleRuleService.save(scheduleRule);
-
+        return R.success("添加成功");
     }
 
     /**
@@ -34,10 +35,10 @@ public class ScheduleRuleController {
      * @param scheduleRule
      */
     @PutMapping
-    public void updata(@RequestBody ScheduleRule scheduleRule) {
+    public R<String> updata(@RequestBody ScheduleRule scheduleRule) {
 
         scheduleRuleService.updateById(scheduleRule);
-
+        return R.success("更新成功");
     }
 
     /**
@@ -45,8 +46,9 @@ public class ScheduleRuleController {
      * @param ids
      */
     @DeleteMapping
-    public void delete(@RequestParam List<Long> ids) {
+    public R<String> delete(@RequestParam List<Long> ids) {
         scheduleRuleService.removeByIds(ids);
+        return R.success("删除成功");
     }
 
     /**
@@ -55,11 +57,11 @@ public class ScheduleRuleController {
      * @return
      */
     @GetMapping("/{id}")
-    public ScheduleRule get(@PathVariable Long id) {
+    public R<ScheduleRule> get(@PathVariable Long id) {
 
         ScheduleRule schedulerule = scheduleRuleService.getById(id);
 
-        return schedulerule;
+        return R.success(schedulerule);
     }
 
     /**
@@ -67,9 +69,9 @@ public class ScheduleRuleController {
      * @return
      */
     @GetMapping("/getAll")
-    public List<ScheduleRule> getAll(){
+    public R<List<ScheduleRule>> getAll(){
         List<ScheduleRule> list = scheduleRuleService.list();
-        return list;
+        return R.success(list);
     }
 
 

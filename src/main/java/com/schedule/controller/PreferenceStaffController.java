@@ -1,5 +1,6 @@
 package com.schedule.controller;
 
+import com.schedule.common.R;
 import com.schedule.entity.PreferenceStaff;
 import com.schedule.service.PreferenceStaffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class PreferenceStaffController {
      * @param preferenceStaff
      */
     @PostMapping("/add")
-    public void add(@RequestBody PreferenceStaff preferenceStaff){
+    public R<String> add(@RequestBody PreferenceStaff preferenceStaff){
         preferenceStaffService.save(preferenceStaff);
-
+        return R.success("添加成功");
     }
 
     /**
@@ -33,10 +34,10 @@ public class PreferenceStaffController {
      * @param preferenceStaff
      */
     @PutMapping
-    public void updata(@RequestBody PreferenceStaff preferenceStaff) {
+    public R<String> updata(@RequestBody PreferenceStaff preferenceStaff) {
 
         preferenceStaffService.updateById(preferenceStaff);
-
+        return R.success("更新成功");
     }
 
     /**
@@ -44,8 +45,9 @@ public class PreferenceStaffController {
      * @param ids
      */
     @DeleteMapping
-    public void delete(@RequestParam List<Long> ids) {
+    public R<String> delete(@RequestParam List<Long> ids) {
         preferenceStaffService.removeByIds(ids);
+        return R.success("删除成功");
     }
 
     /**
@@ -54,11 +56,11 @@ public class PreferenceStaffController {
      * @return
      */
     @GetMapping("/{id}")
-    public PreferenceStaff get(@PathVariable Long id) {
+    public R<PreferenceStaff> get(@PathVariable Long id) {
 
         PreferenceStaff preferenceStaff = preferenceStaffService.getById(id);
 
-        return preferenceStaff;
+        return R.success(preferenceStaff);
     }
 
     /**
@@ -66,8 +68,8 @@ public class PreferenceStaffController {
      * @return
      */
     @GetMapping("/getAll")
-    public List<PreferenceStaff> getAll(){
+    public R<List<PreferenceStaff>> getAll(){
         List<PreferenceStaff> list = preferenceStaffService.list();
-        return list;
+        return R.success(list);
     }
 }
