@@ -8,7 +8,7 @@ import lombok.Data;
  * @create 2023-01-11-15:01
  */
 @Data
-@TableName(value = "scheduling_rule")
+@TableName(value = "rule_store")
 public class Rule {
     private Long id;
 
