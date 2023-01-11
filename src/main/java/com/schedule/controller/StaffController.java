@@ -16,7 +16,7 @@ import java.util.List;
 public class StaffController {
 
     @Autowired
-    private StaffService tstaffService;
+    private StaffService staffService;
 
     /**
      * 添加员工
@@ -24,7 +24,7 @@ public class StaffController {
      */
     @PostMapping("/add")
     public void add(@RequestBody Staff staff){
-        tstaffService.save(staff);
+        staffService.save(staff);
 
     }
 
@@ -35,7 +35,7 @@ public class StaffController {
     @PutMapping
     public void updata(@RequestBody Staff staff) {
 
-        tstaffService.updateById(staff);
+        staffService.updateById(staff);
 
     }
 
@@ -45,7 +45,7 @@ public class StaffController {
      */
     @DeleteMapping
     public void delete(@RequestParam List<Long> ids) {
-        tstaffService.removeByIds(ids);
+        staffService.removeByIds(ids);
     }
 
     /**
@@ -56,7 +56,7 @@ public class StaffController {
     @GetMapping("/{id}")
     public Staff get(@PathVariable Long id) {
 
-        Staff staff = tstaffService.getById(id);
+        Staff staff = staffService.getById(id);
 
         return staff;
     }
@@ -67,7 +67,7 @@ public class StaffController {
      */
     @GetMapping("/getAll")
     public List<Staff> getAll(){
-        List<Staff> list = tstaffService.list();
+        List<Staff> list = staffService.list();
         return list;
     }
 }
