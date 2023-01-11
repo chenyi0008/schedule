@@ -15,6 +15,15 @@ public class Staff {
 
     private String name;
 
+    /**
+     * 六种职位
+     * 门店经理
+     * 副经理
+     * 小组长
+     * 收银
+     * 导购
+     * 库房
+     */
     private String position;
 
     private String telephone;
