@@ -1,9 +1,9 @@
 package com.schedule.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.schedule.entity.PreferenceStaff;
-import com.schedule.mapper.PreferenceStaffMapper;
-import com.schedule.service.PreferenceStaffService;
+import com.schedule.entity.Preference;
+import com.schedule.mapper.PreferenceMapper;
+import com.schedule.service.PreferenceService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Service;
  * @create 2023-01-11-14:50
  */
 @Service
-public class PreferenceStaffServiceImpl extends ServiceImpl<PreferenceStaffMapper, PreferenceStaff> implements PreferenceStaffService {
+public class PreferenceStaffServiceImpl extends ServiceImpl<PreferenceMapper, Preference> implements PreferenceService {
 }

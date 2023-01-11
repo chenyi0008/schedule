@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * staff
  * @author akuya
  * @create 2023-01-09-23:36
  */
@@ -75,7 +76,7 @@ public class StaffController {
     }
 
     /**
-     * 条件分页查询
+     * 分页条件查询
      * @param page
      * @param pageSize
      * @param staffName
@@ -93,5 +94,4 @@ public class StaffController {
         Page<Staff> list = staffService.page(pageInfo, queryWrapper);
         return R.success(list);
     }
-
 }

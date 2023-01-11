@@ -1,7 +1,7 @@
 package com.schedule.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.schedule.entity.PreferenceStaff;
+import com.schedule.entity.Preference;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @create 2023-01-11-14:49
  */
 @Mapper
-public interface PreferenceStaffMapper extends BaseMapper<PreferenceStaff> {
+public interface PreferenceMapper extends BaseMapper<Preference> {
 }

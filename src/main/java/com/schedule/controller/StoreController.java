@@ -1,5 +1,7 @@
 package com.schedule.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.schedule.common.R;
 import com.schedule.entity.Store;
 import com.schedule.service.StoreService;
@@ -71,6 +73,24 @@ public class StoreController {
     @GetMapping("/getAll")
     public R<List<Store>> getAll(){
         List<Store> list = storeService.list();
+        return R.success(list);
+    }
+
+    /**
+     * 分页条件查询
+     * @param page
+     * @param pageSize
+     * @param storeName
+     * @param address
+     * @return
+     */
+    @GetMapping("/page")
+    public R<Page> page(int page,int pageSize,String storeName,String address){
+        Page<Store> pageInfo = new Page<>(page,pageSize);
+        LambdaQueryWrapper<Store> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(storeName != null,Store::getName,storeName);
+        queryWrapper.like(address!=null,Store::getAddress,address);
+        Page<Store> list = storeService.page(pageInfo, queryWrapper);
         return R.success(list);
     }
 

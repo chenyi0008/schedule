@@ -1,42 +1,43 @@
 package com.schedule.controller;
 
 import com.schedule.common.R;
-import com.schedule.entity.PreferenceStaff;
-import com.schedule.service.PreferenceStaffService;
+import com.schedule.entity.Preference;
+import com.schedule.service.PreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
+ * preference
  * @author akuya
  * @create 2023-01-11-14:51
  */
 @RestController
-@RequestMapping("/preferencestaff")
-public class PreferenceStaffController {
+@RequestMapping("/preference")
+public class PreferenceController {
 
     @Autowired
-    private PreferenceStaffService preferenceStaffService;
+    private PreferenceService preferenceStaffService;
 
     /**
      * 添加员工偏好
-     * @param preferenceStaff
+     * @param preference
      */
     @PostMapping("/add")
-    public R<String> add(@RequestBody PreferenceStaff preferenceStaff){
-        preferenceStaffService.save(preferenceStaff);
+    public R<String> add(@RequestBody Preference preference){
+        preferenceStaffService.save(preference);
         return R.success("添加成功");
     }
 
     /**
      * 更新员工偏好数据
-     * @param preferenceStaff
+     * @param preference
      */
     @PutMapping
-    public R<String> updata(@RequestBody PreferenceStaff preferenceStaff) {
+    public R<String> updata(@RequestBody Preference preference) {
 
-        preferenceStaffService.updateById(preferenceStaff);
+        preferenceStaffService.updateById(preference);
         return R.success("更新成功");
     }
 
@@ -56,11 +57,11 @@ public class PreferenceStaffController {
      * @return
      */
     @GetMapping("/{id}")
-    public R<PreferenceStaff> get(@PathVariable Long id) {
+    public R<Preference> get(@PathVariable Long id) {
 
-        PreferenceStaff preferenceStaff = preferenceStaffService.getById(id);
+        Preference preference = preferenceStaffService.getById(id);
 
-        return R.success(preferenceStaff);
+        return R.success(preference);
     }
 
     /**
@@ -68,8 +69,8 @@ public class PreferenceStaffController {
      * @return
      */
     @GetMapping("/getAll")
-    public R<List<PreferenceStaff>> getAll(){
-        List<PreferenceStaff> list = preferenceStaffService.list();
+    public R<List<Preference>> getAll(){
+        List<Preference> list = preferenceStaffService.list();
         return R.success(list);
     }
 }

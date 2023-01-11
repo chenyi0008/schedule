@@ -1,5 +1,6 @@
 package com.schedule.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -7,7 +8,8 @@ import lombok.Data;
  * @create 2023-01-11-15:01
  */
 @Data
-public class ScheduleRule {
+@TableName(value = "scheduling_rule")
+public class Rule {
     private Long id;
 
     private String ruleType;

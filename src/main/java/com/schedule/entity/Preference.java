@@ -1,5 +1,6 @@
 package com.schedule.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -7,7 +8,8 @@ import lombok.Data;
  * @create 2023-01-11-14:45
  */
 @Data
-public class PreferenceStaff {
+@TableName(value = "preference_staff")
+public class Preference {
 
     private Long id;
 
