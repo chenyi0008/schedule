@@ -29,7 +29,7 @@ public class StaffController {
     @PostMapping("/add")
     public R<String> add(@RequestBody Staff staff){
         staffService.save(staff);
-        return R.success("添加成功");
+        return R.msg("添加成功");
     }
 
     /**
@@ -39,7 +39,7 @@ public class StaffController {
     @PutMapping
     public R<String> updata(@RequestBody Staff staff) {
         staffService.updateById(staff);
-        return R.success("更新员工数据成功");
+        return R.msg("更新员工数据成功");
     }
 
     /**
@@ -49,7 +49,7 @@ public class StaffController {
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         staffService.removeByIds(ids);
-        return R.success("删除成功");
+        return R.msg("删除成功");
     }
 
     /**

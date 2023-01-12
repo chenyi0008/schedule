@@ -27,7 +27,7 @@ public class RuleController {
     @PostMapping("/add")
     public R<String> add(@RequestBody Rule rule){
         scheduleRuleService.save(rule);
-        return R.success("添加成功");
+        return R.msg("添加成功");
     }
 
     /**
@@ -38,7 +38,7 @@ public class RuleController {
     public R<String> updata(@RequestBody Rule rule) {
 
         scheduleRuleService.updateById(rule);
-        return R.success("更新成功");
+        return R.msg("更新成功");
     }
 
     /**
@@ -48,7 +48,7 @@ public class RuleController {
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         scheduleRuleService.removeByIds(ids);
-        return R.success("删除成功");
+        return R.msg("删除成功");
     }
 
     /**

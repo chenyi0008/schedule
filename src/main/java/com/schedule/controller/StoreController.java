@@ -27,7 +27,7 @@ public class StoreController {
     @PostMapping
     public R<String> add(@RequestBody Store store){
         storeService.save(store);
-        return R.success("添加成功");
+        return R.msg("添加成功");
     }
 
     /**
@@ -38,7 +38,7 @@ public class StoreController {
     public R<String> updata(@RequestBody Store store) {
 
         storeService.updateById(store);
-        return R.success("更新成功");
+        return R.msg("更新成功");
     }
 
     /**
@@ -48,7 +48,7 @@ public class StoreController {
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         storeService.removeByIds(ids);
-        return R.success("删除成功");
+        return R.msg("删除成功");
     }
 
 

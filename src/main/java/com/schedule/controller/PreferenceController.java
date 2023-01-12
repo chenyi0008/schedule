@@ -27,7 +27,7 @@ public class PreferenceController {
     @PostMapping("/add")
     public R<String> add(@RequestBody Preference preference){
         preferenceStaffService.save(preference);
-        return R.success("添加成功");
+        return R.msg("添加成功");
     }
 
     /**
@@ -38,7 +38,7 @@ public class PreferenceController {
     public R<String> updata(@RequestBody Preference preference) {
 
         preferenceStaffService.updateById(preference);
-        return R.success("更新成功");
+        return R.msg("更新成功");
     }
 
     /**
@@ -48,7 +48,7 @@ public class PreferenceController {
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         preferenceStaffService.removeByIds(ids);
-        return R.success("删除成功");
+        return R.msg("删除成功");
     }
 
     /**
