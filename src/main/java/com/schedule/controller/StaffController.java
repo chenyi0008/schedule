@@ -37,7 +37,7 @@ public class StaffController {
      * @param staff
      */
     @PutMapping
-    public R<String> updata(@RequestBody Staff staff) {
+    public R<String> update(@RequestBody Staff staff) {
         staffService.updateById(staff);
         return R.msg("更新员工数据成功");
     }
