@@ -24,7 +24,7 @@ public class Staff {
      * 导购
      * 库房
      */
-    private String position;
+    private String role;
 
     private String telephone;
 
