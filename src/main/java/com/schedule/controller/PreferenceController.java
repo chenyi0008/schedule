@@ -38,7 +38,6 @@ public class PreferenceController {
         queryWrapper.eq(Preference::getPreferenceType,preferenceType);
         queryWrapper.eq(Preference::getStaffId,staffId);
 
-
         List<Preference> list = preferenceService.list(queryWrapper);
         if (!list.isEmpty())return R.error("请勿重复添加相同类型偏好");
 
@@ -89,4 +88,6 @@ public class PreferenceController {
         List<Preference> list = preferenceService.list();
         return R.success(list);
     }
+
+    
 }
