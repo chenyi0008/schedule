@@ -1,5 +1,7 @@
 package com.schedule.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.schedule.common.R;
 import com.schedule.entity.Preference;
 import com.schedule.service.PreferenceService;
@@ -18,7 +20,7 @@ import java.util.List;
 public class PreferenceController {
 
     @Autowired
-    private PreferenceService preferenceStaffService;
+    private PreferenceService preferenceService;
 
     /**
      * 添加员工偏好
@@ -26,7 +28,21 @@ public class PreferenceController {
      */
     @PostMapping("/add")
     public R<String> add(@RequestBody Preference preference){
-        preferenceStaffService.save(preference);
+        String preferenceType = preference.getPreferenceType();
+        Long staffId = preference.getStaffId();
+
+        /**
+         * 判断是否已有相同类型偏好
+         */
+        LambdaQueryWrapper<Preference> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Preference::getPreferenceType,preferenceType);
+        queryWrapper.eq(Preference::getStaffId,staffId);
+
+
+        List<Preference> list = preferenceService.list(queryWrapper);
+        if (!list.isEmpty())return R.error("请勿重复添加相同类型偏好");
+
+        preferenceService.save(preference);
         return R.msg("添加成功");
     }
 
@@ -37,7 +53,7 @@ public class PreferenceController {
     @PutMapping
     public R<String> updata(@RequestBody Preference preference) {
 
-        preferenceStaffService.updateById(preference);
+        preferenceService.updateById(preference);
         return R.msg("更新成功");
     }
 
@@ -47,7 +63,7 @@ public class PreferenceController {
      */
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
-        preferenceStaffService.removeByIds(ids);
+        preferenceService.removeByIds(ids);
         return R.msg("删除成功");
     }
 
@@ -59,7 +75,7 @@ public class PreferenceController {
     @GetMapping("/{id}")
     public R<Preference> get(@PathVariable Long id) {
 
-        Preference preference = preferenceStaffService.getById(id);
+        Preference preference = preferenceService.getById(id);
 
         return R.success(preference);
     }
@@ -70,7 +86,7 @@ public class PreferenceController {
      */
     @GetMapping("/getAll")
     public R<List<Preference>> getAll(){
-        List<Preference> list = preferenceStaffService.list();
+        List<Preference> list = preferenceService.list();
         return R.success(list);
     }
 }
