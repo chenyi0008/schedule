@@ -2,6 +2,7 @@ package com.schedule.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.schedule.common.BaseContext;
 import com.schedule.common.R;
 import com.schedule.entity.Staff;
 import com.schedule.service.StaffService;
@@ -72,6 +73,8 @@ public class StaffController {
     @GetMapping("/getAll")
     public R<List<Staff>> getAll(){
         List<Staff> list = staffService.list();
+        System.out.println(BaseContext.getUserId());
+        System.out.println(BaseContext.getUsername());
         return R.success(list);
     }
 

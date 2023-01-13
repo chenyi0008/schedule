@@ -58,10 +58,12 @@ public class UserController {
         queryWrapper.eq(User::getPassword,password);
         User one = userService.getOne(queryWrapper);
         if(one != null) {
-            String token = JwtUtil.createToken(user.getUsername(),user.getId());
+            String token = JwtUtil.createToken(user.getUsername(),one.getId());
             return R.success(token,"登录成功");
         }
         else return R.error("账号或密码输入有误");
     }
+
+
 
 }

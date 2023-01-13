@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class JwtUtil {
 
-    private static long time = 1000*60*60*2;//单位：毫秒
+    private static long time = 1000*60*60*2*99;//单位：毫秒
     private static String signature = "admin";
 
     public static String createToken(String username,Long id){
@@ -17,7 +17,7 @@ public class JwtUtil {
                 .setHeaderParam("alg","HS256")
                 //payload
                 .claim("username",username)
-                .claim("id",id)
+                .claim("id",id.toString())
                 .setSubject("username")//可以自定义
                 .setExpiration(new Date(System.currentTimeMillis() + time))
                 .setId(UUID.randomUUID().toString())
@@ -53,6 +53,14 @@ public class JwtUtil {
                 .parseClaimsJws(token);//解析token
         Claims claims = claimsJws.getBody();
         return claims.get("username").toString();
+    }
+
+    public static Long getUserId(String token){
+        JwtParser jwtParser = Jwts.parser();
+        Jws<Claims> claimsJws = jwtParser.setSigningKey(signature)//通过signature签名进行解密
+                .parseClaimsJws(token);//解析token
+        Claims claims = claimsJws.getBody();
+        return Long.valueOf(claims.get("id").toString());
     }
 
 }
