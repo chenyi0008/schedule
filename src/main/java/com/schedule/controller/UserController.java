@@ -5,6 +5,7 @@ import com.schedule.common.R;
 import com.schedule.entity.User;
 import com.schedule.service.UserService;
 import com.schedule.util.CodeUitl;
+import com.schedule.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,8 +56,11 @@ public class UserController {
 
         queryWrapper.eq(User::getUsername,user.getUsername());
         queryWrapper.eq(User::getPassword,password);
-        int count = userService.count(queryWrapper);
-        if(count == 1) return R.msg("登录成功");
+        User one = userService.getOne(queryWrapper);
+        if(one != null) {
+            String token = JwtUtil.createToken(user.getUsername(),user.getId());
+            return R.success(token,"登录成功");
+        }
         else return R.error("账号或密码输入有误");
     }
 

@@ -9,7 +9,7 @@ import lombok.Data;
 @TableName( value = "t_user")
 public class User {
     @TableId(type = IdType.ASSIGN_ID)
-    private Long staffId;
+    private Long id;
 
     private String username;
 

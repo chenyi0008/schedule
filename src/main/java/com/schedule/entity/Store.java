@@ -18,4 +18,6 @@ public class Store {
     private String address;
 
     private double size;
+
+    private Long userId;
 }
