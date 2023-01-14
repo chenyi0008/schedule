@@ -35,7 +35,7 @@ public class RuleController {
      * @param rule
      */
     @PutMapping
-    public R<String> updata(@RequestBody Rule rule) {
+    public R<String> update(@RequestBody Rule rule) {
 
         scheduleRuleService.updateById(rule);
         return R.msg("更新成功");

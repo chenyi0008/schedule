@@ -50,11 +50,11 @@ public class LoginCheckFilter implements Filter {
 
         //判断登录状态，如果已经登录，则直接放行
         String token = request.getHeader("token");
-        String userId = "";
+        Long userId = 888L;
         String username ="";
         Boolean flag = true;
         try{
-//            userId = JwtUtil.getUserId(token);
+            userId = JwtUtil.getUserId(token);
             username = JwtUtil.getUsername(token);
         }catch (Exception e){
 
@@ -64,7 +64,7 @@ public class LoginCheckFilter implements Filter {
         if(flag == true){
             log.info("用户已登录，username:{} id:{}",username,userId);
             log.info("当前线程id为{}",Thread.currentThread().getId());
-            BaseContext.setUserId(Long.getLong(userId));
+            BaseContext.setUserId(userId);
             BaseContext.setUsername(username);
             filterChain.doFilter(request,response);
             return;

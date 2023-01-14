@@ -2,6 +2,7 @@ package com.schedule.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.schedule.common.BaseContext;
 import com.schedule.common.R;
 import com.schedule.entity.Store;
 import com.schedule.service.StoreService;
@@ -26,6 +27,8 @@ public class StoreController {
      */
     @PostMapping
     public R<String> add(@RequestBody Store store){
+        Long userId = BaseContext.getUserId();
+        store.setUserId(userId);
         storeService.save(store);
         return R.msg("添加成功");
     }
