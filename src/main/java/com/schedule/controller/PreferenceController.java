@@ -68,7 +68,7 @@ public class PreferenceController {
     }
 
     /**
-     * 根据id获取单条数据
+     * 根据用户id获取所有相关偏好数据
      * @param id
      * @return
      */
