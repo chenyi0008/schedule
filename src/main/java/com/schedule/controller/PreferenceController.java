@@ -8,6 +8,7 @@ import com.schedule.service.PreferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,11 +73,16 @@ public class PreferenceController {
      * @return
      */
     @GetMapping("/{id}")
-    public R<Preference> get(@PathVariable Long id) {
+    public R<List<Preference>> get(@PathVariable Long id) {
+        List<Preference> list = preferenceService.list();
+        List<Preference> list2 =new ArrayList<>();
+        for(Preference p:list){
+            if(id==p.getStaffId()){
+                list2.add(p);
+            }
+        }
 
-        Preference preference = preferenceService.getById(id);
-
-        return R.success(preference);
+        return R.success(list2);
     }
 
     /**
