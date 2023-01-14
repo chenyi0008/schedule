@@ -50,7 +50,7 @@ public class PreferenceController {
      * @param preference
      */
     @PutMapping
-    public R<String> updata(@RequestBody Preference preference) {
+    public R<String> update(@RequestBody Preference preference) {
 
         preferenceService.updateById(preference);
         return R.msg("更新成功");
@@ -80,7 +80,7 @@ public class PreferenceController {
     }
 
     /**
-     * 获取员工所有数据
+     * 根据员工获取所有偏好
      * @return
      */
     @GetMapping("/getAll")
@@ -88,6 +88,7 @@ public class PreferenceController {
         List<Preference> list = preferenceService.list();
         return R.success(list);
     }
+
 
     
 }

@@ -1,7 +1,9 @@
 package com.schedule.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.schedule.common.BaseContext;
 import com.schedule.common.R;
 import com.schedule.entity.Store;
@@ -38,7 +40,7 @@ public class StoreController {
      * @param store
      */
     @PutMapping
-    public R<String> updata(@RequestBody Store store) {
+    public R<String> update(@RequestBody Store store) {
 
         storeService.updateById(store);
         return R.msg("更新成功");
@@ -76,7 +78,10 @@ public class StoreController {
      */
     @GetMapping("/getAll")
     public R<List<Store>> getAll(){
-        List<Store> list = storeService.list();
+        Long userId = BaseContext.getUserId();
+        LambdaQueryWrapper<Store> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Store::getUserId,userId);
+        List<Store> list = storeService.list(queryWrapper);
         return R.success(list);
     }
 
@@ -90,8 +95,10 @@ public class StoreController {
      */
     @GetMapping("/page")
     public R<Page> page(int page,int pageSize,String storeName,String address){
+        Long userId = BaseContext.getUserId();
         Page<Store> pageInfo = new Page<>(page,pageSize);
         LambdaQueryWrapper<Store> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Store::getUserId,userId);
         queryWrapper.like(storeName != null,Store::getName,storeName);
         queryWrapper.like(address!=null,Store::getAddress,address);
         Page<Store> list = storeService.page(pageInfo, queryWrapper);
