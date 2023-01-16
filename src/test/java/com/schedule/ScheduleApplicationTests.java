@@ -1,8 +1,13 @@
 package com.schedule;
 
+import com.schedule.entity.Staff;
+import com.schedule.mapper.StaffGroupMapper;
 import com.schedule.util.JwtUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 class ScheduleApplicationTests {
@@ -18,6 +23,15 @@ class ScheduleApplicationTests {
     @Test
     void test1(){
         System.out.println(Long.valueOf("1613461092170866689"));
+    }
+
+    @Autowired
+    StaffGroupMapper staffGroupMapper;
+
+    @Test
+    void test2(){
+        List<Staff> listByGroupId = staffGroupMapper.getListByGroupId(1614920848823713793L);
+        System.out.println(listByGroupId);
     }
 
 }
