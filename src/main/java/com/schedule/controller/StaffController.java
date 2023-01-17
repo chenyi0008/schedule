@@ -50,6 +50,10 @@ public class StaffController {
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         staffService.removeByIds(ids);
+
+
+
+
         return R.msg("删除成功");
     }
 

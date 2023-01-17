@@ -1,5 +1,6 @@
 package com.schedule.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.schedule.common.R;
 import com.schedule.entity.Rule;
 import com.schedule.service.RuleService;
@@ -18,7 +19,7 @@ import java.util.List;
 public class RuleController {
 
     @Autowired
-    private RuleService scheduleRuleService;
+    private RuleService ruleService;
 
     /**
      * 添加店铺规则
@@ -26,7 +27,12 @@ public class RuleController {
      */
     @PostMapping("/add")
     public R<String> add(@RequestBody Rule rule){
-        scheduleRuleService.save(rule);
+        //如果有相同类型的规则，先删除，再添加
+        LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Rule::getStoreId,rule.getStoreId());
+        queryWrapper.eq(Rule::getRuleType,rule.getRuleType());
+        ruleService.remove(queryWrapper);
+        ruleService.save(rule);
         return R.msg("添加成功");
     }
 
@@ -36,8 +42,7 @@ public class RuleController {
      */
     @PutMapping
     public R<String> update(@RequestBody Rule rule) {
-
-        scheduleRuleService.updateById(rule);
+        ruleService.updateById(rule);
         return R.msg("更新成功");
     }
 
@@ -47,7 +52,7 @@ public class RuleController {
      */
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
-        scheduleRuleService.removeByIds(ids);
+        ruleService.removeByIds(ids);
         return R.msg("删除成功");
     }
 
@@ -59,9 +64,9 @@ public class RuleController {
     @GetMapping("/{id}")
     public R<Rule> get(@PathVariable Long id) {
 
-        Rule schedulerule = scheduleRuleService.getById(id);
+        Rule rule = ruleService.getById(id);
 
-        return R.success(schedulerule);
+        return R.success(rule);
     }
 
     /**
@@ -70,9 +75,26 @@ public class RuleController {
      */
     @GetMapping("/getAll")
     public R<List<Rule>> getAll(){
-        List<Rule> list = scheduleRuleService.list();
+        List<Rule> list = ruleService.list();
         return R.success(list);
     }
+
+    /**
+     * 根据商店id获取数据
+     * @param storeId
+     * @return
+     */
+    @GetMapping
+    public R<List<Rule>> getRuleByStoreId(Long storeId){
+        LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(storeId != null,Rule::getStoreId,storeId);
+        List<Rule> list = ruleService.list(queryWrapper);
+        return R.success(list);
+    }
+
+
+
+
 
 
 
