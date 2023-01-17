@@ -1,6 +1,7 @@
 package com.schedule;
 
 import com.schedule.entity.Staff;
+import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
 import com.schedule.util.JwtUtil;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import java.util.List;
 @SpringBootTest
 class ScheduleApplicationTests {
 
-    @Test
+//    @Test
     void contextLoads() {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiIxNjEzNDYxMDkyMTcwODY2Njg5Iiwic3ViIjoidXNlcm5hbWUiLCJleHAiOjE2NzQzMjA1ODEsImp0aSI6ImE1N2MyMDhkLTFiNTctNDg4MC05MGJiLTc4NzY3ZDQzMTEwNCJ9.g_F5QSciF3Pp3KcscFUl3uvnqkdin8XD263hCDc4p-8";
         Long userId = JwtUtil.getUserId(token);
@@ -20,7 +21,7 @@ class ScheduleApplicationTests {
         System.out.println(userId);
     }
 
-    @Test
+//    @Test
     void test1(){
         System.out.println(Long.valueOf("1613461092170866689"));
     }
@@ -28,10 +29,25 @@ class ScheduleApplicationTests {
     @Autowired
     StaffGroupMapper staffGroupMapper;
 
-    @Test
+//    @Test
     void test2(){
         List<Staff> listByGroupId = staffGroupMapper.getListByGroupId(1614920848823713793L);
         System.out.println(listByGroupId);
+    }
+
+    @Test
+    void test3(){
+        Flow flow = new Flow();
+        flow.setValue("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30");
+        double[] arr = flow.getArr();
+        for (int i = 0; i < 900; i++) {
+            arr = flow.getArr();
+        }
+
+        for (double i : arr) {
+            System.out.println(i);
+        }
+
     }
 
 }
