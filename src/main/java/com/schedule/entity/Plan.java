@@ -1,4 +1,4 @@
-package com.schedule.service;
+package com.schedule.entity;
 
 import lombok.Data;
 
@@ -10,5 +10,7 @@ public class Plan {
     private String startTime;
 
     private Integer workTime;
+
+    private String date;
 
 }

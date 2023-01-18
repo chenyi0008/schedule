@@ -8,9 +8,9 @@ import lombok.Data;
  */
 @Data
 public class StaffWithPre extends Staff{
-    private Preference DayPre;
+    private String DayPre;
 
-    private Preference WorkTimePre;
+    private String WorkTimePre;
 
-    private Preference ShiftTimePre;
+    private String ShiftTimePre;
 }

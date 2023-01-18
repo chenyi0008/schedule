@@ -6,9 +6,11 @@ import com.schedule.mapper.StaffGroupMapper;
 import com.schedule.service.FlowService;
 import com.schedule.util.JwtUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.schedule.util.GeneratorUtil.RandomGeneration;
@@ -67,4 +69,9 @@ class ScheduleApplicationTests {
         flowService.calculate(1L,"2000-01-01","2000-01-30");
     }
 
+
+    @Test
+    void test6(){
+        System.out.println((int)Math.ceil(1.1));
+    }
 }

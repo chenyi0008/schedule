@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.schedule.entity.*;
 import com.schedule.mapper.FlowMapper;
 import com.schedule.service.*;
+import com.schedule.util.CalculateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements FlowService {
@@ -54,34 +54,24 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         preferenceWrapper.in(Preference::getStaffId,staffIds);
         List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
 
-        //对应偏好匹配对应员工
-        List<Long> ll=new ArrayList<>();
-        List<StaffWithPre> staffWithPreList =new ArrayList<>();
-        for(Preference p:preferenceList){
-            Long IdOfStaff=p.getStaffId();
-            Staff s=staffService.getById(IdOfStaff);
-            if(ll.contains(IdOfStaff)){
-                continue;
-            }
-                ll.add(IdOfStaff);
-                StaffWithPre staffWithPre = new StaffWithPre();
-                BeanUtils.copyProperties(s,staffWithPre);
-            LambdaQueryWrapper<Preference> lp=new LambdaQueryWrapper<>();
-            lp.eq(Preference::getStaffId,IdOfStaff);
-            List<Preference> preferenceList1 = preferenceService.list(lp);
-            for(Preference pp:preferenceList1){
-                if(pp.getPreferenceType().equals("工作日偏好")){
-                    staffWithPre.setDayPre(pp);
-                }else if(pp.getPreferenceType().equals("工作时间偏好")){
-                    staffWithPre.setWorkTimePre(pp);
-                }else{
-                    staffWithPre.setShiftTimePre(pp);
-                }
-            }
-
-            staffWithPreList.add(staffWithPre);
+        //把规则和员工进行捆绑
+        HashMap<Long, StaffWithPre> staffWithPreMap = new HashMap<>();
+        for (Staff staff : staffList) {
+            StaffWithPre staffWithPre = new StaffWithPre();
+            BeanUtils.copyProperties(staff,staffWithPre);
+            staffWithPreMap.put(staff.getId(), staffWithPre);
         }
-
+        for (Preference preference : preferenceList) {
+            Long staffId = preference.getStaffId();
+            StaffWithPre staffWithPre = staffWithPreMap.get(staffId);
+            String type = preference.getPreferenceType();
+            switch (type){
+                case "工作日偏好" : staffWithPre.setDayPre(preference.getValue()); break;
+                case "工作时间偏好" : staffWithPre.setWorkTimePre(preference.getValue()); break;
+                default : staffWithPre.setShiftTimePre(preference.getValue());
+            }
+            staffWithPreMap.put(staffId,staffWithPre);
+        }
 
         //根据商店id获取商店信息
         Store store = storeService.getById(storeId);
@@ -90,6 +80,42 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         LambdaQueryWrapper<Rule> ruleWrapper = new LambdaQueryWrapper<>();
         ruleWrapper.eq(Rule::getStoreId,storeId);
         List<Rule> ruleList = ruleService.list(ruleWrapper);
+
+
+        /**
+         * 算法设计 根据flowList客流量表生成排班表（未填入员工）
+         */
+
+        double n1,n2,n4,j2,k1,k2,k3,closeHour;
+
+        //开店规则
+        //n1,k1  表示开店 n1 个小时前需要有员工当值，当值员工数为门店面积除以 k1
+        double size = store.getSize();
+        n1 = 1.5;
+        k1 = 23.5;
+        double openNum = size / k1;
+
+        //关店规则
+        //"n2,j2,k2”表示关店 n2 个小时内需要有员工当值，当值员工数不小于 j2 并且不小于门店面积除以 k2
+        n2 = 2.5;
+        j2 = 3;
+        k2 = 13;
+        double closeNum = Math.max( j2 , size / k2);
+
+        //客流规则
+        //k3 表示按照业务预测数据，每 k3 个客流必须安排至少一个员工当值
+        k3 = 3.8;
+
+        //值班规则
+        //"n4"表示如果没有客流量的时候，至少需要n个店员值班.
+        n4 = 1;
+
+        //职位规则
+        //"open" : "收银,经理" , "duty" : "经理,导购" , "close" : "收银"
+
+
+
+        CalculateUtil.getPlan(flowList);
 
 
 
