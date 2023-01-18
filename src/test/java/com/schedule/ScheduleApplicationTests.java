@@ -3,12 +3,15 @@ package com.schedule;
 import com.schedule.entity.Staff;
 import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
+import com.schedule.service.FlowService;
 import com.schedule.util.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+
+import static com.schedule.util.GeneratorUtil.RandomGeneration;
 
 @SpringBootTest
 class ScheduleApplicationTests {
@@ -35,19 +38,33 @@ class ScheduleApplicationTests {
         System.out.println(listByGroupId);
     }
 
+//    @Test
+//    void test3(){
+//        Flow flow = new Flow();
+//        flow.setValue("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30");
+//        double[] arr = flow.getArr();
+//        for (int i = 0; i < 900; i++) {
+//            arr = flow.getArr();
+//        }
+//
+//        for (double i : arr) {
+//            System.out.println(i);
+//        }
+//    }
+
+
+    @Autowired
+    FlowService flowService;
+//    @Test
+    void test4(){
+        List<Flow> flows = RandomGeneration("2000-01-01", 30, 1L);
+        flowService.saveBatch(flows);
+
+    }
+
     @Test
-    void test3(){
-        Flow flow = new Flow();
-        flow.setValue("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30");
-        double[] arr = flow.getArr();
-        for (int i = 0; i < 900; i++) {
-            arr = flow.getArr();
-        }
-
-        for (double i : arr) {
-            System.out.println(i);
-        }
-
+    void test5(){
+        flowService.calculate(1L,"2000-01-01","2000-01-30");
     }
 
 }

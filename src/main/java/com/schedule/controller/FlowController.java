@@ -44,13 +44,27 @@ public class FlowController {
     }
 
     /**
-     * 批量删除数据
+     * 根据id批量删除
      * @param ids
      * @return
      */
     @DeleteMapping
-    public R<String> delete(@RequestParam List<Long> ids){
+    public R<String> deleteByIds(@RequestParam List<Long> ids){
         flowService.removeByIds(ids);
+        return R.msg("删除成功");
+    }
+
+    /**
+     * 根据日期批量删除
+     * @return
+     */
+    @DeleteMapping("/date")
+    public R<String> deleteByDate(@RequestParam Long storeId,@RequestParam String startDate,@RequestParam String endDate){
+        LambdaQueryWrapper<Flow> wrapper = new LambdaQueryWrapper<>();
+        wrapper.ge(Flow::getDate,startDate)
+                .le(Flow::getDate,endDate)
+                .eq(Flow::getStoreId,storeId);
+        flowService.remove(wrapper);
         return R.msg("删除成功");
     }
 
@@ -62,13 +76,29 @@ public class FlowController {
      * @return
      */
     @GetMapping
-    public R<List<Flow>> list(@RequestParam String storeId,String startDate,String endDate){
+    public R<List<Flow>> list(@RequestParam Long storeId,String startDate,String endDate){
         LambdaQueryWrapper<Flow> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Flow::getStoreId,storeId)
-                .ge(Flow::getDate,startDate)
-                .le(Flow::getDate,endDate);
+        wrapper.eq(Flow::getStoreId, storeId)
+                .ge(startDate != null, Flow::getDate, startDate)
+                .le(endDate != null, Flow::getDate, endDate);
         List<Flow> list = flowService.list(wrapper);
         return R.success(list);
     }
+
+    /**
+     * 生成排班表
+     * @param storeId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @GetMapping("/schedule")
+    public R<String> schedule(@RequestParam Long storeId, @RequestParam String startDate, @RequestParam String endDate){
+
+        flowService.calculate(storeId,startDate,endDate);
+
+        return R.msg("排班成功");
+    }
+
 
 }

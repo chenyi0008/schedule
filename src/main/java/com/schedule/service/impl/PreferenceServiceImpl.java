@@ -11,5 +11,5 @@ import org.springframework.stereotype.Service;
  * @create 2023-01-11-14:50
  */
 @Service
-public class PreferenceStaffServiceImpl extends ServiceImpl<PreferenceMapper, Preference> implements PreferenceService {
+public class PreferenceServiceImpl extends ServiceImpl<PreferenceMapper, Preference> implements PreferenceService {
 }
