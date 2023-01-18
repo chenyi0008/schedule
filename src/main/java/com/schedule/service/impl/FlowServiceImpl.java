@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.schedule.entity.*;
 import com.schedule.mapper.FlowMapper;
 import com.schedule.service.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,35 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         LambdaQueryWrapper<Preference> preferenceWrapper = new LambdaQueryWrapper<>();
         preferenceWrapper.in(Preference::getStaffId,staffIds);
         List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
+
+        //对应偏好匹配对应员工
+        List<Long> ll=new ArrayList<>();
+        List<StaffWithPre> staffWithPreList =new ArrayList<>();
+        for(Preference p:preferenceList){
+            Long IdOfStaff=p.getStaffId();
+            Staff s=staffService.getById(IdOfStaff);
+            if(ll.contains(IdOfStaff)){
+                continue;
+            }
+                ll.add(IdOfStaff);
+                StaffWithPre staffWithPre = new StaffWithPre();
+                BeanUtils.copyProperties(s,staffWithPre);
+            LambdaQueryWrapper<Preference> lp=new LambdaQueryWrapper<>();
+            lp.eq(Preference::getStaffId,IdOfStaff);
+            List<Preference> preferenceList1 = preferenceService.list(lp);
+            for(Preference pp:preferenceList1){
+                if(pp.getPreferenceType().equals("工作日偏好")){
+                    staffWithPre.setDayPre(pp);
+                }else if(pp.getPreferenceType().equals("工作时间偏好")){
+                    staffWithPre.setWorkTimePre(pp);
+                }else{
+                    staffWithPre.setShiftTimePre(pp);
+                }
+            }
+
+            staffWithPreList.add(staffWithPre);
+        }
+
 
         //根据商店id获取商店信息
         Store store = storeService.getById(storeId);
