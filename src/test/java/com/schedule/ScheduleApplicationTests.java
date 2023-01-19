@@ -1,5 +1,6 @@
 package com.schedule;
 
+import com.alibaba.druid.sql.visitor.functions.Char;
 import com.schedule.entity.Staff;
 import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 import static com.schedule.util.CalculateUtil.f;
 import static com.schedule.util.GeneratorUtil.RandomGeneration;
@@ -67,12 +69,30 @@ class ScheduleApplicationTests {
 
     @Test
     void test5(){
-        flowService.calculate(1L,"2000-01-02","2000-01-07");
+        flowService.calculate(1L,"2000-01-01","2000-01-01");
     }
 
+    @Test
+    void test7(){
+//        flowService.calculate();
+    }
 
     @Test
     void test6(){
-        System.out.println(f(0.00/23/5));
+        Stack<String> stack = new Stack<>();
+        stack.push("a");
+        stack.push("b");
+        stack.push("c");
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println(stack.elementAt(i));
+        }
+
+        stack.push("d");
+        for (int i = 0; i < 4; i++) {
+            System.out.println(stack.size());
+            System.out.println(stack.elementAt(i));
+        }
+
     }
 }

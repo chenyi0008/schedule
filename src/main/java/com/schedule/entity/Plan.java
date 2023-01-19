@@ -21,10 +21,18 @@ public class Plan {
 
     public Plan(Integer startTime, Integer workTime, String date, String workType){
         this.job = new String[]{"门店经理", "副经理", "小组长", "收银", "导购", "库房"};
+        this.startTime = startTime;
+        this.workTime = workTime;
+        this.date = date;
+        this.workType = workType;
     }
 
     public Plan(Integer startTime, Integer workTime, String date, String workType, String[] arr){
         this.job = arr;
+        this.startTime = startTime;
+        this.workTime = workTime;
+        this.date = date;
+        this.workType = workType;
     }
 
 }

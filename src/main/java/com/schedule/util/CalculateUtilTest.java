@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class CalculateUtil {
+public class CalculateUtilTest {
 
     public static List<Stack<Plan>> getPlan(List<Flow> flowList, int n1, int openNum, int n2,int closeNum, double k3, int n4, String[][] job){
         List<Stack<Plan>> res = new ArrayList<>();
@@ -19,31 +19,39 @@ public class CalculateUtil {
             if(week == 0 || week == 6)time = 10;
             double[] arr = f.getArr();
 
-            int[] staffNum = new int[24];
+            int[] staffNum = new int[]{
+                    0,0,0,0,0,
+                    0,0,0,0,2,5,3,
+                    4,2,3,5,4,
+                    8,7,9,8,0,
+                    0,0,0
+            };
             //计算每段时间需要的员工数
-            for (int i = 0; i < arr.length / 2; i++) {
-                staffNum[i] = f(( arr[ 2 * i ] + arr[ 2 * i + 1 ] ) / 2 / k3);
-                if(staffNum[i] == 0) staffNum[i] = n4;
-            }
+//            for (int i = 0; i < arr.length / 2; i++) {
+//                staffNum[i] = f(( arr[ 2 * i ] + arr[ 2 * i + 1 ] ) / 2 / k3);
+//                if(staffNum[i] == 0) staffNum[i] = n4;
+//            }
+
 
             Stack<Plan> stack = new Stack<>();
 
             //开店准备工作加入栈
-            if(job == null)
-                for (int i = 0; i < openNum; i++) {
-                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "开店准备工作"));
-                }
-            else
-                for (int i = 0; i < openNum; i++) {
-                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "开店工作", job[0]));
-                }
+//            if(job == null)
+//                for (int i = 0; i < openNum; i++) {
+//                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "开店准备工作"));
+//                }
+//            else
+//                for (int i = 0; i < openNum; i++) {
+//                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "开店准备工作", job[0]));
+//                }
 
-            //对值班环节进行压栈
             for (int i = time; i < time + 12; i++) {
+
                 int classes = 0;
                 int index = stack.size() - 1;
                 //延长已有的班次
                 while (classes < staffNum[i] && index >= 0){
+
 
                     Plan plan = stack.elementAt(index);
                     int workTime = i - plan.getStartTime() + 1;
@@ -65,32 +73,6 @@ public class CalculateUtil {
                     stack.push(plan);
                     classes ++;
                 }
-            }
-
-            //延长已有的班次
-            int classes = 0;
-            int index = stack.size() - 1;
-            int closeTime = time + 12;
-            while (classes < closeNum && index >= 0){
-
-                Plan plan = stack.elementAt(index);
-                int workTime = closeTime - plan.getStartTime() + 1;
-                if(workTime == 4 && plan.getWorkTime() == 2)break;
-                if(workTime + n2 <= 4){
-                    classes ++;
-                    plan.setWorkType("关店工作");
-                    plan.setWorkTime(workTime);
-                }else{
-                    break;
-                }
-                index --;
-            }
-            while (classes < closeNum){
-                Plan plan;
-                if(job != null) plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "关店工作", job[2]);
-                else plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "关店工作");
-                classes ++;
-                stack.push(plan);
             }
 
             res.add(stack);

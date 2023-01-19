@@ -6,6 +6,7 @@ import com.schedule.entity.*;
 import com.schedule.mapper.FlowMapper;
 import com.schedule.service.*;
 import com.schedule.util.CalculateUtil;
+import com.schedule.util.CalculateUtilTest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,7 +122,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         for(Rule rule:ruleList){
             String ruleType=rule.getRuleType();
             switch (ruleType){
-                case "开店规则" : double[] farr =rule.getArr(); n1=farr[0]; n2=farr[1]; break;
+                case "开店规则" : double[] farr =rule.getArr(); n1=farr[0]; k1=farr[1]; break;
                 case "关店规则" : double[] sarr =rule.getArr(); n2=sarr[0]; j2=sarr[1];k2=sarr[2]; break;
                 case "客流规则" : double[] tarr =rule.getArr(); k3=tarr[0];  break;
                 case "值班规则" : double[] foarr =rule.getArr(); n4=foarr[0]; break;
@@ -141,13 +142,11 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         double closeNum = Math.max( j2 , size / k2);
 
 
-        //类型处理
+        List<Stack<Plan>> plan = CalculateUtil.getPlan(flowList, f(n1), f(openNum), f(n2), f(closeNum), k3, f(n4), ffarr);
 
-
-
-        CalculateUtil.getPlan(flowList, f(n1), f(openNum), f(n2), f(closeNum), k3, f(n4), ffarr);
-
-
+        for (Stack<Plan> stack : plan) {
+            stack.forEach(System.out::println);
+        }
 
     }
 

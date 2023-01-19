@@ -13,4 +13,8 @@ public class StaffWithPre extends Staff{
     private String WorkTimePre;
 
     private String ShiftTimePre;
+
+    private int dayWorkTime;
+
+    private int weekWorkTime;
 }
