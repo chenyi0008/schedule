@@ -3,6 +3,8 @@ package com.schedule.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Arrays;
+
 /**
  * @author akuya
  * @create 2023-01-11-15:01
@@ -17,4 +19,9 @@ public class Rule {
     private Long storeId;
 
     private String value;
+
+    public double[] getArr(){
+        return Arrays.stream(value.split(",")).mapToDouble(Double::parseDouble).toArray();
+    }
+
 }

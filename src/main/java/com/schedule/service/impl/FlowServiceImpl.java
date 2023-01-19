@@ -93,14 +93,15 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         double size = store.getSize();
         n1 = 1.5;
         k1 = 23.5;
-        double openNum = size / k1;
+
+
 
         //关店规则
         //"n2,j2,k2”表示关店 n2 个小时内需要有员工当值，当值员工数不小于 j2 并且不小于门店面积除以 k2
         n2 = 2.5;
         j2 = 3;
         k2 = 13;
-        double closeNum = Math.max( j2 , size / k2);
+
 
         //客流规则
         //k3 表示按照业务预测数据，每 k3 个客流必须安排至少一个员工当值
@@ -112,8 +113,30 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
         //职位规则
         //"open" : "收银,经理" , "duty" : "经理,导购" , "close" : "收银"
+        String ffarr [][]= null;
 
 
+        for(Rule rule:ruleList){
+            String ruleType=rule.getRuleType();
+            switch (ruleType){
+                case "开店规则" : double[] farr =rule.getArr(); n1=farr[0]; n2=farr[1]; break;
+                case "关店规则" : double[] sarr =rule.getArr(); n2=sarr[0]; j2=sarr[1];k2=sarr[2]; break;
+                case "客流规则" : double[] tarr =rule.getArr(); k3=tarr[0];  break;
+                case "值班规则" : double[] foarr =rule.getArr(); n4=foarr[0]; break;
+                case "职位规则" : String [] fiarr=rule.getValue().split("|");
+                                 ffarr= new String[3][];
+                                 ffarr[0]=fiarr[0].split(",");
+                                 ffarr[1]=fiarr[1].split(",");
+                                 ffarr[2]=fiarr[2].split(",");
+            }
+        }
+
+
+        //开店规则员工值
+        double openNum = size / k1;
+
+        //关店规则员工值
+        double closeNum = Math.max( j2 , size / k2);
 
         CalculateUtil.getPlan(flowList);
 
