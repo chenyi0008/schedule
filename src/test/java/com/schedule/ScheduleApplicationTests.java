@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.schedule.util.CalculateUtil.f;
 import static com.schedule.util.GeneratorUtil.RandomGeneration;
 
 @SpringBootTest
@@ -66,12 +67,12 @@ class ScheduleApplicationTests {
 
     @Test
     void test5(){
-        flowService.calculate(1L,"2000-01-01","2000-01-30");
+        flowService.calculate(1L,"2000-01-02","2000-01-07");
     }
 
 
     @Test
     void test6(){
-        System.out.println((int)Math.ceil(1.1));
+        System.out.println(f(0.00/23/5));
     }
 }

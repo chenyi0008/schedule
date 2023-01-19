@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.schedule.util.CalculateUtil.f;
+
 @Service
 public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements FlowService {
 
@@ -91,14 +93,14 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         //开店规则
         //n1,k1  表示开店 n1 个小时前需要有员工当值，当值员工数为门店面积除以 k1
         double size = store.getSize();
-        n1 = 1.5;
-        k1 = 23.5;
+        n1 = 1;
+        k1 = 100;
 
 
 
         //关店规则
         //"n2,j2,k2”表示关店 n2 个小时内需要有员工当值，当值员工数不小于 j2 并且不小于门店面积除以 k2
-        n2 = 2.5;
+        n2 = 2;
         j2 = 3;
         k2 = 13;
 
@@ -108,7 +110,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         k3 = 3.8;
 
         //值班规则
-        //"n4"表示如果没有客流量的时候，至少需要n个店员值班.
+        //"n4"表示如果没有客流量的时候，至少需要 n4 个店员值班.
         n4 = 1;
 
         //职位规则
@@ -138,7 +140,12 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         //关店规则员工值
         double closeNum = Math.max( j2 , size / k2);
 
-        CalculateUtil.getPlan(flowList);
+
+        //类型处理
+
+
+
+        CalculateUtil.getPlan(flowList, f(n1), f(openNum), f(n2), f(closeNum), k3, f(n4), ffarr);
 
 
 
