@@ -64,15 +64,18 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             BeanUtils.copyProperties(staff,staffWithPre);
             staffWithPreMap.put(staff.getId(), staffWithPre);
         }
+        int preNum;
         for (Preference preference : preferenceList) {
+            preNum=0;
             Long staffId = preference.getStaffId();
             StaffWithPre staffWithPre = staffWithPreMap.get(staffId);
             String type = preference.getPreferenceType();
             switch (type){
-                case "工作日偏好" : staffWithPre.setDayPre(preference.getValue()); break;
-                case "工作时间偏好" : staffWithPre.setWorkTimePre(preference.getValue()); break;
-                default : staffWithPre.setShiftTimePre(preference.getValue());
+                case "工作日偏好" : staffWithPre.setDayPre(preference.getValue());preNum++; break;
+                case "工作时间偏好" : staffWithPre.setWorkTimePre(preference.getValue()); preNum++;break;
+                default : staffWithPre.setShiftTimePre(preference.getValue());preNum++;
             }
+            staffWithPre.setPreNum(preNum);
             staffWithPreMap.put(staffId,staffWithPre);
         }
 

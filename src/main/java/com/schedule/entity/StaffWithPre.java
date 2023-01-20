@@ -20,6 +20,8 @@ public class StaffWithPre extends Staff{
 
     private int weekWorkTime;
 
+    private int preNum;
+
     public int[] getArrD(){
         return Arrays.stream(DayPre.split(",")).mapToInt(Integer::parseInt).toArray();
     }
