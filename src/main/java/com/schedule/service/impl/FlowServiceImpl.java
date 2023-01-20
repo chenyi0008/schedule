@@ -57,7 +57,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         preferenceWrapper.in(Preference::getStaffId,staffIds);
         List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
 
-        //把规则和员工进行捆绑
+        //把偏好和员工进行捆绑
         HashMap<Long, StaffWithPre> staffWithPreMap = new HashMap<>();
         for (Staff staff : staffList) {
             StaffWithPre staffWithPre = new StaffWithPre();
@@ -83,6 +83,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         LambdaQueryWrapper<Rule> ruleWrapper = new LambdaQueryWrapper<>();
         ruleWrapper.eq(Rule::getStoreId,storeId);
         List<Rule> ruleList = ruleService.list(ruleWrapper);
+
+        //偏好数据提取
 
 
         /**
