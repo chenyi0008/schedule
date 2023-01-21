@@ -64,6 +64,9 @@ public class UserController {
         else return R.error("账号或密码输入有误");
     }
 
-
+    @GetMapping("/info")
+    public R<String> loginInfo(){
+        return R.error("用户未登录");
+    }
 
 }
