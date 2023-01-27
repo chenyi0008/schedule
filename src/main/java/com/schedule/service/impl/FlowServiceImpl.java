@@ -105,10 +105,10 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
 
         //关店规则
-        //"n2,j2,k2”表示关店 n2 个小时内需要有员工当值，当值员工数不小于 j2 并且不小于门店面积除以 k2
+        //"n2,j2,k2”表示关店 n2 个小时内需要有员工当值，人数 = 门店面积除以 k2 + j2
         n2 = 2;
-        j2 = 3;
-        k2 = 13;
+        j2 = 1;
+        k2 = 80;
 
 
         //客流规则
@@ -144,7 +144,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         double openNum = size / k1;
 
         //关店规则员工值
-        double closeNum = Math.max( j2 , size / k2);
+        double closeNum = size / k2 + j2;
 
 
         List<Stack<Plan>> plan = CalculateUtil.getPlan(flowList, f(n1), f(openNum), f(n2), f(closeNum), k3, f(n4), ffarr);

@@ -31,11 +31,11 @@ public class CalculateUtil {
             //开店准备工作加入栈
             if(job == null)
                 for (int i = 0; i < openNum; i++) {
-                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "开店准备工作"));
+                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作"));
                 }
             else
                 for (int i = 0; i < openNum; i++) {
-                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "开店工作", job[0]));
+                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作", job[0]));
                 }
 
             //对值班环节进行压栈
@@ -87,8 +87,8 @@ public class CalculateUtil {
             }
             while (classes < closeNum){
                 Plan plan;
-                if(job != null) plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "关店工作", job[2]);
-                else plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "关店工作");
+                if(job != null) plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "收尾工作", job[2]);
+                else plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "收尾工作");
                 classes ++;
                 stack.push(plan);
             }

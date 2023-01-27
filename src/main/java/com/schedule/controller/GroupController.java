@@ -34,7 +34,7 @@ public class GroupController {
      * @param group
      * @return
      */
-    @PutMapping
+    @PostMapping
     public R<String> add(@RequestBody Group group){
         Long userId = BaseContext.getUserId();
         group.setUserId(userId);
@@ -47,7 +47,7 @@ public class GroupController {
      * @param group
      * @return
      */
-    @PostMapping
+    @PutMapping
     public R<String> update(@RequestBody Group group){
         Long userId = BaseContext.getUserId();
         LambdaQueryWrapper<Group> queryWrapper = new LambdaQueryWrapper<>();

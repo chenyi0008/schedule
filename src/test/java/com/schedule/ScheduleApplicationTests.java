@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,12 +22,22 @@ import static com.schedule.util.GeneratorUtil.RandomGeneration;
 @SpringBootTest
 class ScheduleApplicationTests {
 
-//    @Test
+    @Test
     void contextLoads() {
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiIxNjEzNDYxMDkyMTcwODY2Njg5Iiwic3ViIjoidXNlcm5hbWUiLCJleHAiOjE2NzQzMjA1ODEsImp0aSI6ImE1N2MyMDhkLTFiNTctNDg4MC05MGJiLTc4NzY3ZDQzMTEwNCJ9.g_F5QSciF3Pp3KcscFUl3uvnqkdin8XD263hCDc4p-8";
-        Long userId = JwtUtil.getUserId(token);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiIxMjMiLCJzdWIiOiJ1c2VybmFtZSIsImV4cCI6MTY3NTE2MTIwOCwianRpIjoiYTMxNzUzOGEtYTI0OS00MmVkLTg0ZWYtNjVlYjQ1YjI3Zjc0In0.kfgXjjeOl4sJaSwrycLQNQ5kqQoVC66cwDL43u2l95s";
+//        Long userId = JwtUtil.getUserId(token);
         String username = JwtUtil.getUsername(token);
-        System.out.println(userId);
+//        System.out.println(userId);
+        System.out.println(username);
+    }
+
+    @Test
+    void test0(){
+        String token = JwtUtil.createToken("admin",123L);
+        System.out.println(token);
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiIxMjMiLCJzdWIiOiJ1c2VybmFtZSIsImV4cCI6MTY3NTE2MTIwOCwianRpIjoiYTMxNzUzOGEtYTI0OS00MmVkLTg0ZWYtNjVlYjQ1YjI3Zjc0In0.kfgXjjeOl4sJaSwrycLQNQ5kqQoVC66cwDL43u2l95s";
+        String username = JwtUtil.getUsername(token);
+        System.out.println(username);
     }
 
 //    @Test
@@ -69,7 +80,7 @@ class ScheduleApplicationTests {
 
     @Test
     void test5(){
-        flowService.calculate(1L,"2000-01-01","2000-01-01");
+        flowService.calculate(1L,"2000-01-01","2000-01-30");
     }
 
     @Test

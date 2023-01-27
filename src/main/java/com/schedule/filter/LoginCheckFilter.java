@@ -13,6 +13,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Enumeration;
 
 /**
  * 检查用户是否已经完成登录
@@ -25,8 +27,12 @@ public class LoginCheckFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
+
+
+
 
         //获取本次请求的URL
         String requestURI = request.getRequestURI();
@@ -57,7 +63,6 @@ public class LoginCheckFilter implements Filter {
             userId = JwtUtil.getUserId(token);
             username = JwtUtil.getUsername(token);
         }catch (Exception e){
-
             flag = false;
         }
 
@@ -73,7 +78,13 @@ public class LoginCheckFilter implements Filter {
         log.info("用户未登录");
         //如果未登录则返回未登录结果，通过输出流方式向客户端页面响应数据
        // response.getWriter().write(JSON.toJSONString(R.error("账号未登录"), SerializerFeature.BrowserCompatible));
+        response.setHeader("Access-Control-Allow-Origin", "*");//ip地址
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token, authorization");
+
         request.getRequestDispatcher("/user/info").forward(request,response);
+
     }
 
     /**

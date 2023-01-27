@@ -7,6 +7,10 @@ import com.schedule.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+     import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -74,7 +78,18 @@ public class RuleController {
      * @return
      */
     @GetMapping("/getAll")
-    public R<List<Rule>> getAll(){
+    public R<List<Rule>> getAll(HttpServletRequest request, HttpServletResponse response){
+        System.out.println("请求头：");
+        Enumeration<String> headerNames1 = request.getHeaderNames();
+        while (headerNames1.hasMoreElements()) {
+            String headerName = headerNames1.nextElement();
+            System.out.println(headerName + ": " + request.getHeader(headerName));
+        }
+        System.out.println("响应头：");
+        Collection<String> headerNames = response.getHeaderNames();
+        for (String headerName : headerNames) {
+            System.out.println(headerName + ": " + response.getHeader(headerName));
+        }
         List<Rule> list = ruleService.list();
         return R.success(list);
     }
