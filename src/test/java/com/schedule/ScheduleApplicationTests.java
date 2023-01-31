@@ -6,6 +6,7 @@ import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
 import com.schedule.service.FlowService;
 import com.schedule.util.JwtUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,5 +106,13 @@ class ScheduleApplicationTests {
             System.out.println(stack.elementAt(i));
         }
 
+    }
+
+    @Test
+    void test8(){
+        boolean[] arr = new boolean[5];
+        for (Boolean aBoolean : arr) {
+            System.out.println(aBoolean);
+        }
     }
 }

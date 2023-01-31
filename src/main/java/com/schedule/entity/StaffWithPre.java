@@ -9,34 +9,72 @@ import java.util.Arrays;
  * @create 2023-01-18-14:57
  */
 @Data
-public class StaffWithPre extends Staff{
-    private String DayPre;
+public class StaffWithPre extends Staff implements Comparable<StaffWithPre>{
+    //工作日偏好
+    private String dayPre;
+    //工作时间偏好
+    private String workTimePre;
+    //班次时长偏好
+    private String shiftTimePre;
 
-    private String WorkTimePre;
+    private int[] dayWorkTime;
 
-    private String ShiftTimePre;
-
-    private int dayWorkTime;
-
-    private int weekWorkTime;
+    private int[] weekWorkTime;
 
     private int preNum;
 
+    private int num = 0;
+
+    private boolean[][] sign;
+
     public int[] getArrD(){
-        return Arrays.stream(DayPre.split(",")).mapToInt(Integer::parseInt).toArray();
+        if(dayPre == null)return new int[]{0,1,2,3,4,5,6};
+        return Arrays.stream(dayPre.split(",")).mapToInt(Integer::parseInt).toArray();
     }
 
-    public int[] getArrW(){
-        int frontHour = Integer.parseInt(WorkTimePre.substring(0,2));
-        int frontMin = Integer.parseInt(WorkTimePre.substring(3,5));
-        if(frontMin>0)frontHour++;
-        int rearwardsHour = Integer.parseInt(WorkTimePre.substring(6,8));
-        return new int[]{frontHour,rearwardsHour};
+    public int[][] getArrW(){
+        if(workTimePre == null)return new int[][]{ {0, 24} };
+        String[] str = workTimePre.split(",");
+        int len = str.length;
+        int[][] res = new int[len][2];
+        for (int i = 0; i < len; i++) {
+            int[] workTime = Arrays.stream(str[i].split("-")).mapToInt(Integer::parseInt).toArray();
+            res[i] = workTime;
+        }
+        return res;
     }
 
-    public int getArrS(){
-        return Integer.parseInt(ShiftTimePre);
+    public void setDayWorkTime(int[] dayWorkTime) {
+        this.dayWorkTime = dayWorkTime;
+    }
+
+    public void setWeekWorkTime(int[] weekWorkTime) {
+        this.weekWorkTime = weekWorkTime;
+    }
+
+    public int[] getArrS(){
+        if(this.shiftTimePre == null)return new int[]{4,20};
+        return Arrays.stream(this.shiftTimePre.split(",")).mapToInt(Integer::parseInt).toArray();
     }
 
 
+    @Override
+    public int compareTo(StaffWithPre o) {
+        return this.num - o.num;
+    }
+
+    @Override
+    public String toString() {
+        return "StaffWithPre{" +
+                ", name=" + getName() +
+//                "dayPre='" + dayPre + '\'' +
+//                ", workTimePre='" + workTimePre + '\'' +
+//                ", shiftTimePre='" + shiftTimePre + '\'' +
+//                ", dayWorkTime=" + Arrays.toString(dayWorkTime) +
+//                ", weekWorkTime=" + Arrays.toString(weekWorkTime) +
+//                ", preNum=" + preNum +
+//                ", num=" + num +
+//                ", sign=" + Arrays.toString(sign) +
+                '}';
+    }
 }

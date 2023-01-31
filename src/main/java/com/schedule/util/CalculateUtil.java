@@ -9,8 +9,8 @@ import java.util.*;
 
 public class CalculateUtil {
 
-    public static List<Stack<Plan>> getPlan(List<Flow> flowList, int n1, int openNum, int n2,int closeNum, double k3, int n4, String[][] job){
-        List<Stack<Plan>> res = new ArrayList<>();
+    public static List<List<Plan>> getPlan(List<Flow> flowList, int n1, int openNum, int n2,int closeNum, double k3, int n4, String[][] job){
+        List<List<Plan>> res = new ArrayList<>();
         Flow flow = flowList.get(0);
         int week = getWeekday(flow.getDate());
 
@@ -31,11 +31,11 @@ public class CalculateUtil {
             //开店准备工作加入栈
             if(job == null)
                 for (int i = 0; i < openNum; i++) {
-                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作"));
+                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作", week));
                 }
             else
                 for (int i = 0; i < openNum; i++) {
-                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作", job[0]));
+                    stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作", job[0], week));
                 }
 
             //对值班环节进行压栈
@@ -60,8 +60,8 @@ public class CalculateUtil {
                 //添加班次
                 while (classes < staffNum[i]){
                     Plan plan;
-                    if(job != null) plan = new Plan(i, 2, f.getDate(), "值班工作", job[1]);
-                    else plan = new Plan(i, 2, f.getDate(), "值班工作");
+                    if(job != null) plan = new Plan(i, 2, f.getDate(), "值班工作", job[1], week);
+                    else plan = new Plan(i, 2, f.getDate(), "值班工作", week);
                     stack.push(plan);
                     classes ++;
                 }
@@ -78,7 +78,7 @@ public class CalculateUtil {
                 if(workTime == 4 && plan.getWorkTime() == 2)break;
                 if(workTime + n2 <= 4){
                     classes ++;
-                    plan.setWorkType("关店工作");
+                    plan.setWorkType("收尾工作");
                     plan.setWorkTime(workTime);
                 }else{
                     break;
@@ -87,13 +87,14 @@ public class CalculateUtil {
             }
             while (classes < closeNum){
                 Plan plan;
-                if(job != null) plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "收尾工作", job[2]);
-                else plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "收尾工作");
+                if(job != null) plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "收尾工作", job[2], week);
+                else plan = new Plan(closeTime, Math.max(2, n2), f.getDate(), "收尾工作", week);
                 classes ++;
                 stack.push(plan);
             }
 
-            res.add(stack);
+            List<Plan> list = new ArrayList<>(stack);
+            res.add(list);
         }
         return res;
     }

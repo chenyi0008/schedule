@@ -7,6 +7,7 @@ import com.schedule.mapper.FlowMapper;
 import com.schedule.service.*;
 import com.schedule.util.CalculateUtil;
 import com.schedule.util.CalculateUtilTest;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,17 +59,17 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
 
         //把偏好和员工进行捆绑
-        HashMap<Long, StaffWithPre> staffWithPreMap = new HashMap<>();
+        HashMap<Long, StaffWithPre> map = new HashMap<>();
         for (Staff staff : staffList) {
             StaffWithPre staffWithPre = new StaffWithPre();
             BeanUtils.copyProperties(staff,staffWithPre);
-            staffWithPreMap.put(staff.getId(), staffWithPre);
+            map.put(staff.getId(), staffWithPre);
         }
         int preNum;
         for (Preference preference : preferenceList) {
             preNum=0;
             Long staffId = preference.getStaffId();
-            StaffWithPre staffWithPre = staffWithPreMap.get(staffId);
+            StaffWithPre staffWithPre = map.get(staffId);
             String type = preference.getPreferenceType();
             switch (type){
                 case "工作日偏好" : staffWithPre.setDayPre(preference.getValue());preNum++; break;
@@ -76,7 +77,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 default : staffWithPre.setShiftTimePre(preference.getValue());preNum++;
             }
             staffWithPre.setPreNum(preNum);
-            staffWithPreMap.put(staffId,staffWithPre);
+            map.put(staffId,staffWithPre);
         }
 
         //根据商店id获取商店信息
@@ -140,6 +141,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         }
 
 
+
+
         //开店规则员工值
         double openNum = size / k1;
 
@@ -147,10 +150,172 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         double closeNum = size / k2 + j2;
 
 
-        List<Stack<Plan>> plan = CalculateUtil.getPlan(flowList, f(n1), f(openNum), f(n2), f(closeNum), k3, f(n4), ffarr);
+        List<List<Plan>> plans = CalculateUtil.getPlan(flowList, f(n1), f(openNum), f(n2), f(closeNum), k3, f(n4), ffarr);
 
-        for (Stack<Plan> stack : plan) {
-            stack.forEach(System.out::println);
+        /**
+         * 计算每个班次符合条件的人数
+         */
+        List<Plan> sortedPlan = new LinkedList<>();
+
+        int day = 0;
+        for (List<Plan> plan : plans) {
+            int shift = 0;
+            for (Plan unit : plan) {
+                List<StaffWithPre> list = new ArrayList<>();
+                for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
+//                    System.out.println(entry.getValue());
+                    StaffWithPre staff = entry.getValue();
+                    unit.setDay(day);
+                    unit.setShift(shift);
+                    //判断工作日偏好
+                    Boolean weekDayFlag = false;
+                    if(staff.getDayPre() != null){
+                        int[] arrD = staff.getArrD();
+                        for (int i : arrD) {
+                            if(i == unit.getWeekDay())weekDayFlag = true;
+                        }
+                    }else weekDayFlag = true;
+
+                    //判断工作时间偏好
+                    Boolean workTimeFlag = false;
+                    if(staff.getWorkTimePre() != null){
+                        int[][] arrW = staff.getArrW();
+                        for (int[] arr : arrW) {
+                            int startTime = unit.getStartTime();
+                            int endTime = startTime + unit.getWorkTime();
+
+                            if(arr[0] <= startTime && arr[1] >= endTime){
+                                workTimeFlag = true;
+                                break;
+                            }
+                        }
+                    }else workTimeFlag = true;
+
+                    //判断工作类型
+                    Boolean workTypeFlag = false;
+                    String[] job = unit.getJob();
+                    for (String s : job) {
+                        if(s.equals(staff.getRole())) workTypeFlag = true;
+                    }
+
+                    if(weekDayFlag && workTimeFlag && workTypeFlag){
+                        list.add(staff);
+                        int num = staff.getNum();
+                        staff.setNum(num + 1);
+                        map.put(staff.getId(), staff);
+                    }
+
+                }
+
+                unit.setNum(list.size());
+                unit.setList(list);
+                shift ++;
+                sortedPlan.add(unit);
+//                System.out.println(unit);
+//                System.out.println();
+            }
+            day ++;
+        }
+
+        Collections.sort(sortedPlan, new Comparator<Plan>() {
+            @Override
+            public int compare(Plan o1, Plan o2) {
+                return o1.getNum() - o2.getNum();
+            }
+        });
+
+
+
+        System.out.println(sortedPlan);
+
+        //初始化sign数组 设置工作时长
+        for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
+            StaffWithPre staff = entry.getValue();
+            staff.setSign(new boolean[day][24]);
+
+            int[] arr = staff.getArrS();
+            int[] dayWorkTime = new int[day];
+            int[] weekWorkTime = new int[day / 7 + 1];
+            Arrays.fill(dayWorkTime, arr[0]);
+            Arrays.fill(weekWorkTime, arr[1]);
+            staff.setDayWorkTime(dayWorkTime);
+            staff.setWeekWorkTime(weekWorkTime);
+
+            map.put(entry.getKey(), staff);
+//            System.out.println(entry.getValue());
+        }
+
+        for (Plan plan : sortedPlan) {
+            List<StaffWithPre> list = plan.getList();
+            Integer today = plan.getDay();
+
+            Queue<StaffWithPre> queue = new LinkedList<>();
+            for (StaffWithPre staff : list) {
+
+                //把名单插入
+                Long id = staff.getId();
+                StaffWithPre staffWithPre = map.get(id);
+                queue.add(staffWithPre);
+                //判断他们的班次是否冲突 是否有间隔
+            }
+
+            while (!queue.isEmpty()){
+                StaffWithPre staff = queue.poll();
+                int[] dayWorkTime = staff.getDayWorkTime();
+                int[] weekWorkTime = staff.getWeekWorkTime();
+                Integer workTime = plan.getWorkTime();
+                boolean tag = false;
+                if(dayWorkTime[today] >= workTime && weekWorkTime[today / 7] >= workTime){
+                    boolean[][] sign = staff.getSign();
+                    boolean flag = true;
+                    //判断时间是否冲突
+                    for (Integer i = 0; i < plan.getWorkTime(); i++) {
+                        Integer startTime = plan.getStartTime();
+                        if(sign[today][startTime + i] == true) flag = false;
+                    }
+                    //标记对应的时间已被占用
+                    if(flag == true){
+                        for (Integer i = 0; i < plan.getWorkTime(); i++) {
+                            Integer startTime = plan.getStartTime();
+                            sign[today][startTime + i] = true;
+                        }
+                        staff.setSign(sign);
+                        dayWorkTime[today] -= workTime;
+                        weekWorkTime[today / 7] -= workTime;
+                        staff.setDayWorkTime(dayWorkTime);
+                        staff.setWeekWorkTime(weekWorkTime);
+                        map.put(staff.getId(), staff);
+                        plan.setStaffId(staff.getId());
+                        tag = true;
+                    }
+                }
+                if(tag)break;
+            }
+        }
+
+        Collections.sort(sortedPlan, new Comparator<Plan>() {
+            @Override
+            public int compare(Plan o1, Plan o2) {
+                if(o1.getDay() == o2.getDay())return o1.getShift() - o2.getShift();
+                return o1.getDay() - o2.getDay();
+            }
+        });
+
+        for (Plan plan : sortedPlan) {
+            System.out.println(plan);
+            System.out.println();
+        }
+
+        for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
+            System.out.println(entry.getValue().getName());
+            for (int i : entry.getValue().getDayWorkTime()) {
+                System.out.print(i + ",");
+            }
+            System.out.println();
+            for (int i : entry.getValue().getWeekWorkTime()) {
+                System.out.print(i + ",");
+            }
+            System.out.println();
         }
 
     }

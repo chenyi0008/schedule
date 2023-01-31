@@ -68,8 +68,8 @@ public class CalculateUtilTest {
                 //添加班次
                 while (classes < staffNum[i]){
                     Plan plan;
-                    if(job != null) plan = new Plan(i, 2, f.getDate(), "值班工作", job[1]);
-                    else plan = new Plan(i, 2, f.getDate(), "值班工作");
+                    if(job != null) plan = new Plan(i, 2, f.getDate(), "值班工作", job[1], week);
+                    else plan = new Plan(i, 2, f.getDate(), "值班工作", week);
                     stack.push(plan);
                     classes ++;
                 }
