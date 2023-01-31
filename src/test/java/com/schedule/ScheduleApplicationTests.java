@@ -91,19 +91,22 @@ class ScheduleApplicationTests {
 
     @Test
     void test6(){
-        Stack<String> stack = new Stack<>();
-        stack.push("a");
-        stack.push("b");
-        stack.push("c");
-
-        for (int i = 0; i < 3; i++) {
-            System.out.println(stack.elementAt(i));
-        }
-
-        stack.push("d");
-        for (int i = 0; i < 4; i++) {
-            System.out.println(stack.size());
-            System.out.println(stack.elementAt(i));
+//        Stack<String> stack = new Stack<>();
+//        stack.push("a");
+//        stack.push("b");
+//        stack.push("c");
+//
+//        for (int i = 0; i < 3; i++) {
+//            System.out.println(stack.elementAt(i));
+//        }
+//
+//        stack.push("d");
+//        for (int i = 0; i < 4; i++) {
+//            System.out.println(stack.size());
+//            System.out.println(stack.elementAt(i));
+//        }
+        for (int i = 1; i <= 1; i++) {
+            System.out.println(999);
         }
 
     }

@@ -124,6 +124,9 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         //"open" : "收银,经理" , "duty" : "经理,导购" , "close" : "收银"
         String ffarr [][]= null;
 
+        //休息规则
+        //每连续工作4小时，休息k小时
+        int relax = 1;
 
         for(Rule rule:ruleList){
             String ruleType=rule.getRuleType();
@@ -137,6 +140,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                                  ffarr[0]=fiarr[0].split(",");
                                  ffarr[1]=fiarr[1].split(",");
                                  ffarr[2]=fiarr[2].split(",");
+                                 break;
+                case "休息规则" : relax = Integer.parseInt(rule.getValue());
             }
         }
 
@@ -261,6 +266,9 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
             while (!queue.isEmpty()){
                 StaffWithPre staff = queue.poll();
+                boolean[][] copy = Arrays.stream(staff.getSign())
+                        .map(boolean[]::clone)
+                        .toArray(boolean[][]::new);
                 int[] dayWorkTime = staff.getDayWorkTime();
                 int[] weekWorkTime = staff.getWeekWorkTime();
                 Integer workTime = plan.getWorkTime();
@@ -273,20 +281,44 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                         Integer startTime = plan.getStartTime();
                         if(sign[today][startTime + i] == true) flag = false;
                     }
+
                     //标记对应的时间已被占用
                     if(flag == true){
+                        //标记
                         for (Integer i = 0; i < plan.getWorkTime(); i++) {
                             Integer startTime = plan.getStartTime();
                             sign[today][startTime + i] = true;
                         }
-                        staff.setSign(sign);
-                        dayWorkTime[today] -= workTime;
-                        weekWorkTime[today / 7] -= workTime;
-                        staff.setDayWorkTime(dayWorkTime);
-                        staff.setWeekWorkTime(weekWorkTime);
-                        map.put(staff.getId(), staff);
-                        plan.setStaffId(staff.getId());
-                        tag = true;
+                        //判断是否有连续工作超过4h
+                        int tmp = 0;
+                        for (int i = 0; i < sign[today].length; i++) {
+                            if (sign[today][i]){
+                                tmp ++;
+                                if(tmp >= 4){
+                                    //每工作4h要休息relax小时
+                                    for (int j = 1; j <= relax && i + j < 24; j++) {
+                                        if(sign[today][i + j])flag = false;
+                                    }
+                                    if (tmp > 4)flag = false;
+                                }
+                            }else tmp = 0;
+                        }
+
+                        if (flag){
+                            staff.setSign(sign);
+                            dayWorkTime[today] -= workTime;
+                            weekWorkTime[today / 7] -= workTime;
+                            staff.setDayWorkTime(dayWorkTime);
+                            staff.setWeekWorkTime(weekWorkTime);
+                            map.put(staff.getId(), staff);
+                            plan.setStaffId(staff.getId());
+                            tag = true;
+                        }else{
+//                            sign = Arrays.stream(copy)
+//                                    .map(boolean[]::clone)
+//                                    .toArray(boolean[][]::new);
+                            staff.setSign(copy);
+                        }
                     }
                 }
                 if(tag)break;
@@ -307,6 +339,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         }
 
         for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
+
             System.out.println(entry.getValue().getName());
             for (int i : entry.getValue().getDayWorkTime()) {
                 System.out.print(i + ",");
@@ -315,6 +348,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             for (int i : entry.getValue().getWeekWorkTime()) {
                 System.out.print(i + ",");
             }
+            System.out.println();
+            System.out.println(entry.getValue().getNum());
             System.out.println();
         }
 

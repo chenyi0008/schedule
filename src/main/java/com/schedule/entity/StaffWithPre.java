@@ -53,7 +53,7 @@ public class StaffWithPre extends Staff implements Comparable<StaffWithPre>{
     }
 
     public int[] getArrS(){
-        if(this.shiftTimePre == null)return new int[]{4,20};
+        if(this.shiftTimePre == null)return new int[]{8,40};
         return Arrays.stream(this.shiftTimePre.split(",")).mapToInt(Integer::parseInt).toArray();
     }
 
