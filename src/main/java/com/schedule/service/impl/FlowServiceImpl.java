@@ -342,6 +342,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                             staff.setDayWorkTime(dayWorkTime);
                             staff.setWeekWorkTime(weekWorkTime);
                             map.put(staff.getId(), staff);
+                            plan.setStaff(staff);
                             plan.setStaffId(staff.getId());
                             tag = true;
                             total ++;

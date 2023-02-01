@@ -34,6 +34,8 @@ public class Plan {
     //重复次数
     private Integer repeat;
 
+    private StaffWithPre staff;
+
 
 
     public Plan(Integer startTime, Integer workTime, String date, String workType, Integer weekDay){

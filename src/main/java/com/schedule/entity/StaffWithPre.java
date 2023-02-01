@@ -27,6 +27,8 @@ public class StaffWithPre extends Staff implements Comparable<StaffWithPre>{
 
     private boolean[][] sign;
 
+
+
     public int[] getArrD(){
         if(dayPre == null)return new int[]{0,1,2,3,4,5,6};
         return Arrays.stream(dayPre.split(",")).mapToInt(Integer::parseInt).toArray();
