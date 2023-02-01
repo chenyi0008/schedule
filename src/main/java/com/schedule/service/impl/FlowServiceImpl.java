@@ -221,19 +221,19 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         }
 
         //计算时间重复次数
-        List<Plan> sortedPlan2 = new LinkedList<>(sortedPlan);
-        int[][] stat = new int[day][24];
-
-        for (Plan plan : sortedPlan2) {
-            Integer day1 = plan.getDay();
-            Integer startTime = plan.getStartTime();
-            stat[day1][startTime] ++;
-        }
-        for (Plan plan : sortedPlan2) {
-            Integer day1 = plan.getDay();
-            Integer startTime = plan.getStartTime();
-            plan.setRepeat(stat[day1][startTime]);
-        }
+//        List<Plan> sortedPlan2 = new LinkedList<>(sortedPlan);
+//        int[][] stat = new int[day][24];
+//
+//        for (Plan plan : sortedPlan2) {
+//            Integer day1 = plan.getDay();
+//            Integer startTime = plan.getStartTime();
+//            stat[day1][startTime] ++;
+//        }
+//        for (Plan plan : sortedPlan2) {
+//            Integer day1 = plan.getDay();
+//            Integer startTime = plan.getStartTime();
+//            plan.setRepeat(stat[day1][startTime]);
+//        }
 
 
         Collections.sort(sortedPlan, new Comparator<Plan>() {
@@ -243,13 +243,16 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             }
         });
 
-        Collections.sort(sortedPlan2, new Comparator<Plan>() {
-            @Override
-            public int compare(Plan o1, Plan o2) {
-                return  o2.getRepeat() - o1.getRepeat();
-            }
-        });
+//        Collections.sort(sortedPlan2, new Comparator<Plan>() {
+//            @Override
+//            public int compare(Plan o1, Plan o2) {
+//                return  o2.getRepeat() - o1.getRepeat();
+//            }
+//        });
 
+        for (Plan s : sortedPlan) {
+            System.out.println(s);
+        }
 
 
         System.out.println(sortedPlan);
@@ -284,6 +287,11 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 StaffWithPre staffWithPre = map.get(id);
                 queue.add(staffWithPre);
                 //判断他们的班次是否冲突 是否有间隔
+            }
+
+            for (StaffWithPre staffWithPre : queue) {
+                System.out.println("**********");
+                System.out.println(staffWithPre + " " + staffWithPre.getNum());
             }
 
 

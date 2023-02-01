@@ -60,7 +60,7 @@ public class StaffWithPre extends Staff implements Comparable<StaffWithPre>{
 
     @Override
     public int compareTo(StaffWithPre o) {
-        return this.num - o.num;
+        return (this.num - o.num);
     }
 
     @Override
