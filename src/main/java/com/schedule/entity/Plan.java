@@ -31,6 +31,8 @@ public class Plan {
     private Integer day;
     //班次编号
     private Integer shift;
+    //重复次数
+    private Integer repeat;
 
 
 

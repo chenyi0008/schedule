@@ -159,7 +159,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
          * 计算每个班次符合条件的人数
          */
         List<Plan> sortedPlan = new LinkedList<>();
-        List<Plan> sortedPlan2;
+
         int day = 0;
         for (List<Plan> plan : plans) {
             int shift = 0;
@@ -220,10 +220,33 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             day ++;
         }
 
+        //计算时间重复次数
+        List<Plan> sortedPlan2 = new LinkedList<>(sortedPlan);
+        int[][] stat = new int[day][24];
+
+        for (Plan plan : sortedPlan2) {
+            Integer day1 = plan.getDay();
+            Integer startTime = plan.getStartTime();
+            stat[day1][startTime] ++;
+        }
+        for (Plan plan : sortedPlan2) {
+            Integer day1 = plan.getDay();
+            Integer startTime = plan.getStartTime();
+            plan.setRepeat(stat[day1][startTime]);
+        }
+
+
         Collections.sort(sortedPlan, new Comparator<Plan>() {
             @Override
             public int compare(Plan o1, Plan o2) {
                 return o1.getNum() - o2.getNum();
+            }
+        });
+
+        Collections.sort(sortedPlan2, new Comparator<Plan>() {
+            @Override
+            public int compare(Plan o1, Plan o2) {
+                return  o2.getRepeat() - o1.getRepeat();
             }
         });
 
