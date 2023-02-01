@@ -6,8 +6,6 @@ import com.schedule.entity.*;
 import com.schedule.mapper.FlowMapper;
 import com.schedule.service.*;
 import com.schedule.util.CalculateUtil;
-import com.schedule.util.CalculateUtilTest;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
 
     @Override
-    public void calculate(Long storeId, String startDate, String endDate) {
+    public List<Plan> calculate(Long storeId, String startDate, String endDate) {
 
         /**
          * 为算法做准备 将需要用到的数据全部查询出来
@@ -161,7 +159,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
          * 计算每个班次符合条件的人数
          */
         List<Plan> sortedPlan = new LinkedList<>();
-
+        List<Plan> sortedPlan2;
         int day = 0;
         for (List<Plan> plan : plans) {
             int shift = 0;
@@ -250,6 +248,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 //            System.out.println(entry.getValue());
         }
 
+        int total = 0;
         for (Plan plan : sortedPlan) {
             List<StaffWithPre> list = plan.getList();
             Integer today = plan.getDay();
@@ -263,6 +262,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 queue.add(staffWithPre);
                 //判断他们的班次是否冲突 是否有间隔
             }
+
 
             while (!queue.isEmpty()){
                 StaffWithPre staff = queue.poll();
@@ -313,6 +313,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                             map.put(staff.getId(), staff);
                             plan.setStaffId(staff.getId());
                             tag = true;
+                            total ++;
                         }else{
 //                            sign = Arrays.stream(copy)
 //                                    .map(boolean[]::clone)
@@ -338,22 +339,33 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             System.out.println();
         }
 
+        System.out.print("已成功排班比例：");
+        System.out.println(total * 1.0 / sortedPlan.size());
+
         for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
 
+            System.out.print("员工姓名：");
             System.out.println(entry.getValue().getName());
+            System.out.print("每天剩余时间：");
             for (int i : entry.getValue().getDayWorkTime()) {
                 System.out.print(i + ",");
             }
             System.out.println();
+            System.out.print("每周剩余时间：");
             for (int i : entry.getValue().getWeekWorkTime()) {
                 System.out.print(i + ",");
             }
             System.out.println();
+            System.out.print("对应班次数量：");
             System.out.println(entry.getValue().getNum());
             System.out.println();
         }
 
+        return sortedPlan;
+
     }
+
+
 
 
 
