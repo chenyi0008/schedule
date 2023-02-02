@@ -85,20 +85,7 @@ public class FlowController {
         return R.success(list);
     }
 
-    /**
-     * 生成排班表
-     * @param storeId
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @GetMapping("/schedule")
-    public R<String> schedule(@RequestParam Long storeId, @RequestParam String startDate, @RequestParam String endDate){
 
-        flowService.calculate(storeId,startDate,endDate);
-
-        return R.msg("排班成功");
-    }
 
 
 }

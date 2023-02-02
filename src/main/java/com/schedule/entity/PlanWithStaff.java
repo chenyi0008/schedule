@@ -26,4 +26,8 @@ public class PlanWithStaff {
     private Long id;
 
     private Long storeId;
+
+    private Integer startTime;
+
+    private Integer workTime;
 }

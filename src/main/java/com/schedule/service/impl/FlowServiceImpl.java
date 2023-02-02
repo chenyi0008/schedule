@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static com.schedule.util.CalculateUtil.f;
-import static com.schedule.util.CalculateUtil.getPlan;
 
 @Service
 public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements FlowService {
@@ -34,6 +33,9 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
     PlanService planService;
 
 
+    HashMap<Long, StaffWithPre> map = new HashMap<>();
+    Store store;
+    List<Rule> ruleList;
 
     @Override
     public List<Plan> calculate(Long storeId, String startDate, String endDate) {
@@ -51,46 +53,83 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         if(flowList.size() != days + 1)throw new RuntimeException(startDate + "至" + endDate + "的数据不完整，请先添加顾客预测流量数据" );
 
         //根据商店id查询员工，再根据员工id查询偏好
-        LambdaQueryWrapper<Staff> staffWrapper = new LambdaQueryWrapper<>();
-        staffWrapper.eq(Staff::getStoreId,storeId);
-        List<Staff> staffList = staffService.list(staffWrapper);
-        List<Long> staffIds = new ArrayList<>();
-        for (Staff staff : staffList) {
-            staffIds.add(staff.getId());
-        }
-        LambdaQueryWrapper<Preference> preferenceWrapper = new LambdaQueryWrapper<>();
-        preferenceWrapper.in(Preference::getStaffId,staffIds);
-        List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
 
-        //把偏好和员工进行捆绑
-        HashMap<Long, StaffWithPre> map = new HashMap<>();
-        for (Staff staff : staffList) {
-            StaffWithPre staffWithPre = new StaffWithPre();
-            BeanUtils.copyProperties(staff,staffWithPre);
-            map.put(staff.getId(), staffWithPre);
-        }
-        int preNum;
-        for (Preference preference : preferenceList) {
-            preNum=0;
-            Long staffId = preference.getStaffId();
-            StaffWithPre staffWithPre = map.get(staffId);
-            String type = preference.getPreferenceType();
-            switch (type){
-                case "工作日偏好" : staffWithPre.setDayPre(preference.getValue());preNum++; break;
-                case "工作时间偏好" : staffWithPre.setWorkTimePre(preference.getValue()); preNum++;break;
-                default : staffWithPre.setShiftTimePre(preference.getValue());preNum++;
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LambdaQueryWrapper<Staff> staffWrapper = new LambdaQueryWrapper<>();
+                staffWrapper.eq(Staff::getStoreId,storeId);
+                List<Staff> staffList = staffService.list(staffWrapper);
+                List<Long> staffIds = new ArrayList<>();
+                for (Staff staff : staffList) {
+                    staffIds.add(staff.getId());
+                }
+                LambdaQueryWrapper<Preference> preferenceWrapper = new LambdaQueryWrapper<>();
+                preferenceWrapper.in(Preference::getStaffId,staffIds);
+                List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
+
+                //把偏好和员工进行捆绑
+
+                for (Staff staff : staffList) {
+                    StaffWithPre staffWithPre = new StaffWithPre();
+                    BeanUtils.copyProperties(staff,staffWithPre);
+                    map.put(staff.getId(), staffWithPre);
+                }
+                int preNum;
+                for (Preference preference : preferenceList) {
+                    preNum=0;
+                    Long staffId = preference.getStaffId();
+                    StaffWithPre staffWithPre = map.get(staffId);
+                    String type = preference.getPreferenceType();
+                    switch (type){
+                        case "工作日偏好" : staffWithPre.setDayPre(preference.getValue());preNum++; break;
+                        case "工作时间偏好" : staffWithPre.setWorkTimePre(preference.getValue()); preNum++;break;
+                        default : staffWithPre.setShiftTimePre(preference.getValue());preNum++;
+                    }
+                    staffWithPre.setPreNum(preNum);
+                    map.put(staffId,staffWithPre);
+                }
             }
-            staffWithPre.setPreNum(preNum);
-            map.put(staffId,staffWithPre);
-        }
+        });
+
 
         //根据商店id获取商店信息
-        Store store = storeService.getById(storeId);
+
+        Thread thread2 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                store = storeService.getById(storeId);
+            }
+        });
+
 
         //根据商店id获取商店规则
-        LambdaQueryWrapper<Rule> ruleWrapper = new LambdaQueryWrapper<>();
-        ruleWrapper.eq(Rule::getStoreId,storeId);
-        List<Rule> ruleList = ruleService.list(ruleWrapper);
+        Thread thread3 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LambdaQueryWrapper<Rule> ruleWrapper = new LambdaQueryWrapper<>();
+                ruleWrapper.eq(Rule::getStoreId,storeId);
+                ruleList = ruleService.list(ruleWrapper);
+
+            }
+        });
+
+        long t1 = System.currentTimeMillis();
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        try{
+            thread2.join();
+            thread3.join();
+            thread1.join();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        long t2 = System.currentTimeMillis();
+        System.out.println("查表所耗时间：" + (t2 - t1) + "ms");
 
         //偏好数据提取
 
@@ -98,7 +137,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         /**
          * 算法设计 根据flowList客流量表生成排班表（未填入员工）
          */
-
+        long t3 = System.currentTimeMillis();
         double n1,n2,n4,j2,k1,k2,k3,closeHour;
 
         //开店规则
@@ -256,9 +295,9 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 //            }
 //        });
 
-        for (Plan s : sortedPlan) {
-            System.out.println(s);
-        }
+//        for (Plan s : sortedPlan) {
+//            System.out.println(s);
+//        }
 
 
         System.out.println(sortedPlan);
@@ -295,10 +334,10 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 //判断他们的班次是否冲突 是否有间隔
             }
 
-            for (StaffWithPre staffWithPre : queue) {
-                System.out.println("**********");
-                System.out.println(staffWithPre + " " + staffWithPre.getNum());
-            }
+//            for (StaffWithPre staffWithPre : queue) {
+//                System.out.println("**********");
+//                System.out.println(staffWithPre + " " + staffWithPre.getNum());
+//            }
 
 
             while (!queue.isEmpty()){
@@ -398,7 +437,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             System.out.println(entry.getValue().getNum());
             System.out.println();
         }
-
+        long t4 = System.currentTimeMillis();
+        System.out.println("计算所耗时间：" + (t2 - t1) + "ms");
         return sortedPlan;
 
     }
