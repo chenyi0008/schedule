@@ -47,6 +47,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 .ge(Flow::getDate,startDate)
                 .le(Flow::getDate,endDate);
         List<Flow> flowList = this.list(flowWrapper);
+        int days = CalculateUtil.dateDifference(startDate, endDate);
+        if(flowList.size() != days + 1)throw new RuntimeException(startDate + "至" + endDate + "的数据不完整，请先添加顾客预测流量数据" );
 
         //根据商店id查询员工，再根据员工id查询偏好
         LambdaQueryWrapper<Staff> staffWrapper = new LambdaQueryWrapper<>();

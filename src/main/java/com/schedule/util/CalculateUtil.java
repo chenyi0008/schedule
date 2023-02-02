@@ -5,6 +5,8 @@ import com.schedule.entity.Plan;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 public class CalculateUtil {
@@ -114,6 +116,16 @@ public class CalculateUtil {
         return week;
 
     }
+
+    public static int dateDifference(String start, String end){
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        Period period = Period.between(startDate, endDate);
+        int days = period.getDays();
+        int totalDays = days + (period.getYears() * 365) + (period.getMonths() * 30);
+        return totalDays;
+    }
+
 
     public static int f(double x){
         return (int) Math.ceil(x);

@@ -5,6 +5,7 @@ import com.schedule.entity.Staff;
 import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
 import com.schedule.service.FlowService;
+import com.schedule.util.CalculateUtil;
 import com.schedule.util.JwtUtil;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.jupiter.api.Test;
@@ -113,9 +114,7 @@ class ScheduleApplicationTests {
 
     @Test
     void test8(){
-        boolean[] arr = new boolean[5];
-        for (Boolean aBoolean : arr) {
-            System.out.println(aBoolean);
-        }
+        int i = CalculateUtil.dateDifference("2001-01-05", "2001-01-01");
+        System.out.println(i);
     }
 }

@@ -1,5 +1,7 @@
 package com.schedule.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import lombok.Data;
 @Data
 @TableName(value = "plan_staff")
 public class PlanWithStaff {
+
     private String staff;
 
     private String time;
