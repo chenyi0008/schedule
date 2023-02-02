@@ -372,35 +372,10 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             }
         });
 
-        long startTime=System.currentTimeMillis();
-        List<PlanWithStaff> planWithStaffList =new ArrayList<>();
-
         for (Plan plan : sortedPlan) {
             System.out.println(plan);
-            PlanWithStaff planWithStaff =new PlanWithStaff();
-            if(plan.getStaff()!=null){
-                planWithStaff.setStaff(plan.getStaff().getName());
-            }
-            int endtime=plan.getStartTime()+plan.getWorkTime();
-            String time;
-            time=plan.getStartTime()+":00"+"--"+endtime+":00";
-            planWithStaff.setTime(time);
-            planWithStaff.setStaffId(plan.getStaffId());
-            planWithStaff.setWork(plan.getWorkType());
-            planWithStaff.setDate(plan.getDate());
-            planWithStaffList.add(planWithStaff);
-
-
             System.out.println();
         }
-
-
-
-        planService.saveBatch(planWithStaffList);
-        long endTime=System.currentTimeMillis();
-
-        System.out.println("程序运行时间： "+(endTime-startTime)+"ms");
-
 
         System.out.print("已成功排班比例：");
         System.out.println(total * 1.0 / sortedPlan.size());

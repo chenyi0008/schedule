@@ -24,4 +24,6 @@ public class PlanWithStaff {
     private String Date;
 
     private Long id;
+
+    private Long storeId;
 }
