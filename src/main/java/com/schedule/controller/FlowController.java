@@ -7,6 +7,7 @@ import com.schedule.service.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,6 +27,19 @@ public class FlowController {
      */
     @PutMapping
     public R<String> save(@RequestBody List<Flow> flows){
+
+        List<String> list = new LinkedList<>();
+        Long storeId = flows.get(0).getStoreId();
+
+        for (Flow flow : flows) {
+            String date = flow.getDate();
+            list.add(date);
+        }
+
+        LambdaQueryWrapper<Flow> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Flow::getStoreId, storeId)
+                .in(Flow::getDate, list);
+        flowService.remove(wrapper);
         flowService.saveBatch(flows);
         return R.msg("添加成功");
     }

@@ -32,11 +32,14 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
     @Autowired
     PlanService planService;
 
+    @Autowired
+    FlowService flowService;
+
 
     HashMap<Long, StaffWithPre> map = new HashMap<>();
     Store store;
     List<Rule> ruleList;
-
+    List<Flow> flowList;
     @Override
     public List<Plan> calculate(Long storeId, String startDate, String endDate) {
 
@@ -44,13 +47,21 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
          * 为算法做准备 将需要用到的数据全部查询出来
          */
         //根据日期获取flow的记录
-        LambdaQueryWrapper<Flow> flowWrapper = new LambdaQueryWrapper<>();
-        flowWrapper.eq(Flow::getStoreId,storeId)
-                .ge(Flow::getDate,startDate)
-                .le(Flow::getDate,endDate);
-        List<Flow> flowList = this.list(flowWrapper);
-        int days = CalculateUtil.dateDifference(startDate, endDate);
-        if(flowList.size() != days + 1)throw new RuntimeException(startDate + "至" + endDate + "的数据不完整，请先添加顾客预测流量数据" );
+        int days;
+
+        Thread thread4 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LambdaQueryWrapper<Flow> flowWrapper = new LambdaQueryWrapper<>();
+                flowWrapper.eq(Flow::getStoreId,storeId)
+                        .ge(Flow::getDate,startDate)
+                        .le(Flow::getDate,endDate);
+                flowList = flowService.list(flowWrapper);
+                int days = CalculateUtil.dateDifference(startDate, endDate);
+                if(flowList.size() != days + 1)throw new RuntimeException(startDate + "至" + endDate + "的数据不完整，请先添加顾客预测流量数据" );
+
+            }
+        });
 
         //根据商店id查询员工，再根据员工id查询偏好
 
@@ -120,10 +131,12 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         thread1.start();
         thread2.start();
         thread3.start();
+        thread4.start();
         try{
             thread2.join();
             thread3.join();
             thread1.join();
+            thread4.join();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -300,7 +313,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 //        }
 
 
-        System.out.println(sortedPlan);
+//        System.out.println(sortedPlan);
 
         //初始化sign数组 设置工作时长
         for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
@@ -411,34 +424,34 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             }
         });
 
-        for (Plan plan : sortedPlan) {
-            System.out.println(plan);
-            System.out.println();
-        }
+//        for (Plan plan : sortedPlan) {
+//            System.out.println(plan);
+//            System.out.println();
+//        }
 
         System.out.print("已成功排班比例：");
         System.out.println(total * 1.0 / sortedPlan.size());
 
-        for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
-
-            System.out.print("员工姓名：");
-            System.out.println(entry.getValue().getName());
-            System.out.print("每天剩余时间：");
-            for (int i : entry.getValue().getDayWorkTime()) {
-                System.out.print(i + ",");
-            }
-            System.out.println();
-            System.out.print("每周剩余时间：");
-            for (int i : entry.getValue().getWeekWorkTime()) {
-                System.out.print(i + ",");
-            }
-            System.out.println();
-            System.out.print("对应班次数量：");
-            System.out.println(entry.getValue().getNum());
-            System.out.println();
-        }
+//        for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
+//
+//            System.out.print("员工姓名：");
+//            System.out.println(entry.getValue().getName());
+//            System.out.print("每天剩余时间：");
+//            for (int i : entry.getValue().getDayWorkTime()) {
+//                System.out.print(i + ",");
+//            }
+//            System.out.println();
+//            System.out.print("每周剩余时间：");
+//            for (int i : entry.getValue().getWeekWorkTime()) {
+//                System.out.print(i + ",");
+//            }
+//            System.out.println();
+//            System.out.print("对应班次数量：");
+//            System.out.println(entry.getValue().getNum());
+//            System.out.println();
+//        }
         long t4 = System.currentTimeMillis();
-        System.out.println("计算所耗时间：" + (t2 - t1) + "ms");
+        System.out.println("计算所耗时间：" + (t4 - t3) + "ms");
         return sortedPlan;
 
     }

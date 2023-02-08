@@ -104,9 +104,12 @@ public class PlanController {
         });
 
         thread.start();
-
+        long t5 = System.currentTimeMillis();
         List<Plan> planList= flowService.calculate(storeId,startDate,endDate);
+        long t6 = System.currentTimeMillis();
+
         List<PlanWithStaff> planWithStaffList=new ArrayList<>();
+
 
         for(Plan plan:planList) {
             PlanWithStaff planWithStaff =new PlanWithStaff();
@@ -126,15 +129,19 @@ public class PlanController {
             planWithStaffList.add(planWithStaff);
         }
 
+//        System.out.println("处理数据所耗时间：" + (t6 - t5) + "ms");
+
         try{
             thread.join();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+        long t3 = System.currentTimeMillis();
         planService.saveBatch(planWithStaffList);
-
         long t2 = System.currentTimeMillis();
-        System.out.println("查表所耗时间：" + (t2 - t1) + "ms");
+
+        System.out.println("存数据所耗时间：" + (t2 - t3) + "ms");
+        System.out.println("总所耗时间：" + (t2 - t1) + "ms");
         return R.success(planWithStaffList);
    }
 

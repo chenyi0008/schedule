@@ -1,6 +1,8 @@
 package com.schedule;
 
 import com.alibaba.druid.sql.visitor.functions.Char;
+import com.schedule.common.R;
+import com.schedule.controller.FlowController;
 import com.schedule.entity.Staff;
 import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
@@ -112,9 +114,12 @@ class ScheduleApplicationTests {
 
     }
 
+    @Autowired
+    FlowController flowController;
+
     @Test
     void test8(){
-        int i = CalculateUtil.dateDifference("2001-01-05", "2001-01-01");
-        System.out.println(i);
+        R<List<Flow>> list = flowController.list(1L, "2023-02-01", "2023-03-01");
+        System.out.println(list);
     }
 }
