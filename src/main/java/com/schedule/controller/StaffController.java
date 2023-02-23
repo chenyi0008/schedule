@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.schedule.common.BaseContext;
 import com.schedule.common.R;
 import com.schedule.entity.Staff;
+import com.schedule.service.GroupService;
 import com.schedule.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ public class StaffController {
 
     @Autowired
     private StaffService staffService;
+
+    @Autowired
+    private GroupService groupService;
 
     /**
      * 添加员工
@@ -77,6 +81,7 @@ public class StaffController {
     @GetMapping("/getAll")
     public R<List<Staff>> getAll(){
         List<Staff> list = staffService.list();
+        Long userId = BaseContext.getUserId();
         System.out.println(BaseContext.getUserId());
         System.out.println(BaseContext.getUsername());
         return R.success(list);
@@ -91,14 +96,15 @@ public class StaffController {
      * @return
      */
     @GetMapping("/page")
-    public R<Page> page(int page,int pageSize,String staffName,String storeId){
-        //分页构造器
-        Page<Staff> pageInfo = new Page<>(page,pageSize);
-        //条件构造器
-        LambdaQueryWrapper<Staff> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(staffName != null, Staff::getName, staffName);
-        queryWrapper.eq(storeId != null, Staff::getStoreId, storeId);
-        Page<Staff> list = staffService.page(pageInfo, queryWrapper);
+    public R<List<Staff>> page(Integer page, Integer pageSize, String staffName, Long storeId){
+//        //分页构造器
+//        Page<Staff> pageInfo = new Page<>(page,pageSize);
+//        //条件构造器
+//        LambdaQueryWrapper<Staff> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.like(staffName != null, Staff::getName, staffName);
+//        queryWrapper.eq(storeId != null, Staff::getStoreId, storeId);
+//        Page<Staff> list = staffService.page(pageInfo, queryWrapper);
+        List<Staff> list = staffService.getListByCondition(staffName, storeId, page, pageSize);
         return R.success(list);
     }
 }

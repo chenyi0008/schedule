@@ -39,6 +39,7 @@ public class FlowController {
         LambdaQueryWrapper<Flow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Flow::getStoreId, storeId)
                 .in(Flow::getDate, list);
+
         flowService.remove(wrapper);
         flowService.saveBatch(flows);
         return R.msg("添加成功");
@@ -78,6 +79,7 @@ public class FlowController {
         wrapper.ge(Flow::getDate,startDate)
                 .le(Flow::getDate,endDate)
                 .eq(Flow::getStoreId,storeId);
+
         flowService.remove(wrapper);
         return R.msg("删除成功");
     }
@@ -94,7 +96,8 @@ public class FlowController {
         LambdaQueryWrapper<Flow> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Flow::getStoreId, storeId)
                 .ge(startDate != null, Flow::getDate, startDate)
-                .le(endDate != null, Flow::getDate, endDate);
+                .le(endDate != null, Flow::getDate, endDate)
+                .orderByAsc(Flow::getDate);;
         List<Flow> list = flowService.list(wrapper);
         return R.success(list);
     }

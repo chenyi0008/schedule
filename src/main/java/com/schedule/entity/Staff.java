@@ -1,5 +1,6 @@
 package com.schedule.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -31,5 +32,8 @@ public class Staff {
     private String mailbox;
 
     private Long storeId;
+
+    @TableField(exist = false)
+    private String groupName;
 
 }

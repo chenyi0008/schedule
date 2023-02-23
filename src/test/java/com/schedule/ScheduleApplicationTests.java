@@ -6,7 +6,9 @@ import com.schedule.controller.FlowController;
 import com.schedule.entity.Staff;
 import com.schedule.entity.Flow;
 import com.schedule.mapper.StaffGroupMapper;
+import com.schedule.mapper.StaffMapper;
 import com.schedule.service.FlowService;
+import com.schedule.service.StaffService;
 import com.schedule.util.CalculateUtil;
 import com.schedule.util.JwtUtil;
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -121,5 +123,23 @@ class ScheduleApplicationTests {
     void test8(){
         R<List<Flow>> list = flowController.list(1L, "2023-02-01", "2023-03-01");
         System.out.println(list);
+    }
+
+    @Autowired
+    StaffMapper staffMapper;
+
+    @Autowired
+    StaffService staffService;
+
+    @Test
+    void test9(){
+//        List<Staff> groupDate = staffMapper.getAllDate(1L, "小",0,5);
+//        for (Staff s : groupDate) {
+//            System.out.println(s);
+//        }
+        List<Staff> list = staffService.getListByCondition("小", 1L, 1, 4);
+        for (Staff staff : list) {
+            System.out.println(staff);
+        }
     }
 }

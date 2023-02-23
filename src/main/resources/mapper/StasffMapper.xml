@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schedule.mapper.StaffMapper">
+
+<!--    <select id="selectByCondition" resultType="book">-->
+<!--        select *-->
+<!--        from tbl_book-->
+<!--    </select>-->
+    <select id="getAllDate" resultType="com.schedule.entity.Staff">
+        select t1.*, t2.name as group_name from
+        (select t1.* ,t2.group_id from t_staff as t1 left outer join staff_group as t2 on t1.id = t2.staff_id
+        <where>
+            <if test="storeId != null">
+                and store_id = #{storeId}
+            </if>
+            <if test="staffName != null and staffName !=''">
+                and t1.name like concat('%',#{staffName},'%')
+            </if>
+        </where>
+            )
+        as t1 left outer join t_group as t2 on t1.group_id = t2.id
+            <if test="m != null and n != null">
+                limit #{m},#{n}
+            </if>
+    </select>
+
+
+</mapper>
