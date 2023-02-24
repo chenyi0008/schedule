@@ -36,4 +36,7 @@ public class Staff {
     @TableField(exist = false)
     private String groupName;
 
+    @TableField(exist = false)
+    private String groupId;
+
 }

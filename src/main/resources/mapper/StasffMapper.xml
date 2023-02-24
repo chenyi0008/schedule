@@ -9,7 +9,7 @@
 <!--    </select>-->
     <select id="getAllDate" resultType="com.schedule.entity.Staff">
         select t1.*, t2.name as group_name from
-        (select t1.* ,t2.group_id from t_staff as t1 left outer join staff_group as t2 on t1.id = t2.staff_id
+        (select t1.* ,t2.* from t_staff as t1 left outer join staff_group as t2 on t1.id = t2.staff_id
         <where>
             <if test="storeId != null">
                 and store_id = #{storeId}

@@ -89,23 +89,23 @@ public class GroupController {
     /**
      * 员工加入小组
      * @param groupId
-     * @param staffIds
+     * @param staffId
      * @return
      */
     @GetMapping("/join")
-    public R<String> join(Long groupId,@RequestParam List<Long> staffIds){
-        staffGroupService.removeByIds(staffIds);
+    public R<String> join(Long groupId,@RequestParam Long staffId){
 
-        List<StaffGroup> list = new ArrayList<>();
 
-        for (Long staffId : staffIds) {
-            StaffGroup staffGroup = new StaffGroup();
-            staffGroup.setStaffId(staffId);
-            staffGroup.setGroupId(groupId);
-            list.add(staffGroup);
-        }
+        LambdaQueryWrapper<StaffGroup> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StaffGroup::getStaffId, staffId);
+        staffGroupService.remove(queryWrapper);
+        if(groupId == -1)return R.msg("删除成功");
 
-        staffGroupService.saveBatch(list);
+        StaffGroup staffGroup = new StaffGroup();
+        staffGroup.setStaffId(staffId);
+        staffGroup.setGroupId(groupId);
+
+        staffGroupService.save(staffGroup);
         return R.msg("加入成功");
     }
 

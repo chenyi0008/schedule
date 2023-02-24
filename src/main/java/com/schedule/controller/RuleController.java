@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
      import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -26,6 +28,13 @@ public class RuleController {
 
     @Autowired
     private RuleService ruleService;
+
+    public static String getExceptionSrintStackTrace(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
+    }
 
     /**
      * 添加店铺规则
@@ -58,7 +67,9 @@ public class RuleController {
                 default:throw new CustomException("不含有此类型的规则");
             }
         }catch (Exception e){
-            throw new CustomException(e.getMessage());
+            e.printStackTrace();
+            throw new CustomException(getExceptionSrintStackTrace(e));
+
         }
 
         ruleService.remove(queryWrapper);
