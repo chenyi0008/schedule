@@ -96,7 +96,7 @@ public class StaffController {
      * @return
      */
     @GetMapping("/page")
-    public R<List<Staff>> page(Integer page, Integer pageSize, String staffName, Long storeId){
+    public R<List<Staff>> page(Integer page, Integer pageSize, String staffName, @RequestParam Long storeId){
 //        //分页构造器
 //        Page<Staff> pageInfo = new Page<>(page,pageSize);
 //        //条件构造器

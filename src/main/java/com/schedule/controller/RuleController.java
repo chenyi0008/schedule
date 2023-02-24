@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
      import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -35,6 +36,29 @@ public class RuleController {
         LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Rule::getStoreId,rule.getStoreId());
         queryWrapper.eq(Rule::getRuleType,rule.getRuleType());
+        String value = rule.getValue();
+
+        try{
+            double n1,k1,n2,j2,k2,k3,n4;
+
+            String ruleType=rule.getRuleType();
+            switch (ruleType){
+                case "开店规则" : double[] farr =rule.getArr(); n1=farr[0]; k1=farr[1]; break;
+                case "关店规则" : double[] sarr =rule.getArr(); n2=sarr[0]; j2=sarr[1];k2=sarr[2]; break;
+                case "客流规则" : double[] tarr =rule.getArr(); k3=tarr[0];  break;
+                case "值班规则" : double[] foarr =rule.getArr(); n4=foarr[0]; break;
+                case "职位规则" : String [] fiarr=rule.getValue().split("|");
+                    String[][] ffarr = new String[3][];
+                    ffarr[0]=fiarr[0].split(",");
+                    ffarr[1]=fiarr[1].split(",");
+                    ffarr[2]=fiarr[2].split(",");
+                    break;
+                case "休息规则" : Integer.parseInt(rule.getValue());
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+
         ruleService.remove(queryWrapper);
         ruleService.save(rule);
         return R.msg("添加成功");
