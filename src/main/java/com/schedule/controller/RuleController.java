@@ -1,6 +1,7 @@
 package com.schedule.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.schedule.common.CustomException;
 import com.schedule.common.R;
 import com.schedule.entity.Rule;
 import com.schedule.service.RuleService;
@@ -53,10 +54,11 @@ public class RuleController {
                     ffarr[1]=fiarr[1].split(",");
                     ffarr[2]=fiarr[2].split(",");
                     break;
-                case "休息规则" : Integer.parseInt(rule.getValue());
+                case "休息规则" : Integer.parseInt(rule.getValue());break;
+                default:throw new CustomException("不含有此类型的规则");
             }
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
+            throw new CustomException(e.getMessage());
         }
 
         ruleService.remove(queryWrapper);
