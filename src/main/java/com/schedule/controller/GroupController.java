@@ -29,6 +29,7 @@ public class GroupController {
     @Autowired
     private StaffGroupService staffGroupService;
 
+
     /**
      * 添加小组
      * @param group
@@ -37,6 +38,7 @@ public class GroupController {
     @PostMapping
     public R<String> add(@RequestBody Group group){
         Long userId = BaseContext.getUserId();
+        group.setId(null);
         group.setUserId(userId);
         groupService.save(group);
         return R.msg("添加成功");
@@ -69,6 +71,11 @@ public class GroupController {
         queryWrapper.eq(Group::getUserId,userId);
         queryWrapper.eq(Group::getId,id);
         groupService.remove(queryWrapper);
+
+        LambdaQueryWrapper<StaffGroup> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(StaffGroup::getGroupId, id);
+        staffGroupService.remove(wrapper);
+
         return R.msg("删除成功");
     }
 

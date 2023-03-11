@@ -1,6 +1,7 @@
 package com.schedule.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.schedule.common.CustomException;
 import com.schedule.common.R;
 import com.schedule.entity.User;
 import com.schedule.service.UserService;
@@ -29,6 +30,7 @@ public class UserController {
 
         //判断账号是否已存在
         String username = user.getUsername();
+        if(username == null || user.getPassword() == null)throw new CustomException("账号和密码不能为空");
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUsername,username);
         int count = userService.count(queryWrapper);

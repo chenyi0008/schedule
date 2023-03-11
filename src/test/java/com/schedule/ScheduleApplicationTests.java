@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
 
 import static com.schedule.util.CalculateUtil.f;
@@ -141,5 +142,27 @@ class ScheduleApplicationTests {
         for (Staff staff : list) {
             System.out.println(staff);
         }
+
+        Scanner sc = new Scanner(System.in);
+    }
+
+    @Test
+    void test(){
+
+            int n;
+            Scanner sc = new Scanner(System.in);
+            n = sc.nextInt();
+            int[] a = new int[n];
+
+            for(int i = 0;i < n ; i++){
+                a[i] = sc.nextInt();
+            }
+
+            System.out.print("N=" + a);
+
+
+
+            /********* End *********/
+
     }
 }

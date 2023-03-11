@@ -2,6 +2,7 @@ package com.schedule.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.schedule.common.CustomException;
 import com.schedule.entity.*;
 import com.schedule.mapper.FlowMapper;
 import com.schedule.service.*;
@@ -49,19 +50,19 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         //根据日期获取flow的记录
         int days;
 
-        Thread thread4 = new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        Thread thread4 = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 LambdaQueryWrapper<Flow> flowWrapper = new LambdaQueryWrapper<>();
                 flowWrapper.eq(Flow::getStoreId,storeId)
                         .ge(Flow::getDate,startDate)
                         .le(Flow::getDate,endDate);
                 flowList = flowService.list(flowWrapper);
-                int days = CalculateUtil.dateDifference(startDate, endDate);
-                if(flowList.size() != days + 1)throw new RuntimeException(startDate + "至" + endDate + "的数据不完整，请先添加顾客预测流量数据" );
+                days = CalculateUtil.dateDifference(startDate, endDate);
+                if(flowList.size() != days + 1)throw new CustomException(startDate + "至" + endDate + "的数据不完整，请先添加顾客预测流量数据" );
 
-            }
-        });
+//            }
+//        });
 
         //根据商店id查询员工，再根据员工id查询偏好
 
@@ -131,12 +132,10 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         thread1.start();
         thread2.start();
         thread3.start();
-        thread4.start();
         try{
             thread2.join();
             thread3.join();
             thread1.join();
-            thread4.join();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
