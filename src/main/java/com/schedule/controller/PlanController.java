@@ -78,6 +78,13 @@ public class PlanController {
                 .ge(startDate != null,PlanWithStaff::getDate, startDate)
                 .le(endDate != null,PlanWithStaff::getDate, endDate);
         List<PlanWithStaff> list = planService.list(wrapper);
+        for(PlanWithStaff p:list){
+            int start=p.getStartTime();
+            int end=start+p.getWorkTime();
+            if((start>=11&&start<=14)||(end>=11&&end<=14)||(start>=17&&start<=20)||(end>=17&&end<=20)){
+                p.setFlag(true);
+            }
+        }
         return R.success(list);
     }
 
