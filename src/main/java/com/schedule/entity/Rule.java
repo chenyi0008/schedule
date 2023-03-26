@@ -20,8 +20,10 @@ public class Rule {
 
     private String value;
 
-    public double[] getArr(){
+    public double[] fGetArr(){
+        if(!value.equals("职位规则"))
         return Arrays.stream(value.split(",")).mapToDouble(Double::parseDouble).toArray();
+        return new double[1];
     }
 
 }

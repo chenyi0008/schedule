@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -57,10 +56,10 @@ public class RuleController {
 
             String ruleType=rule.getRuleType();
             switch (ruleType){
-                case "开店规则" : double[] farr =rule.getArr(); n1=farr[0]; k1=farr[1]; break;
-                case "关店规则" : double[] sarr =rule.getArr(); n2=sarr[0]; j2=sarr[1];k2=sarr[2]; break;
-                case "客流规则" : double[] tarr =rule.getArr(); k3=tarr[0];  break;
-                case "值班规则" : double[] foarr =rule.getArr(); n4=foarr[0]; break;
+                case "开店规则" : double[] farr =rule.fGetArr(); n1=farr[0]; k1=farr[1]; break;
+                case "关店规则" : double[] sarr =rule.fGetArr(); n2=sarr[0]; j2=sarr[1];k2=sarr[2]; break;
+                case "客流规则" : double[] tarr =rule.fGetArr(); k3=tarr[0];  break;
+                case "值班规则" : double[] foarr =rule.fGetArr(); n4=foarr[0]; break;
                 case "职位规则" : String [] fiarr=rule.getValue().split("|");
                     String[][] ffarr = new String[3][];
                     ffarr[0]=fiarr[0].split(",");
@@ -73,7 +72,7 @@ public class RuleController {
         }catch (Exception e){
             e.printStackTrace();
 
-            throw new CustomException("数据存在错误：" + e.getMessage());
+            throw new CustomException("数据存在错误:" + e.getMessage());
 
 
         }

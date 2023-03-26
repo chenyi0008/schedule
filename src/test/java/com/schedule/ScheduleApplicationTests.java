@@ -65,9 +65,9 @@ class ScheduleApplicationTests {
 //    void test3(){
 //        Flow flow = new Flow();
 //        flow.setValue("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30");
-//        double[] arr = flow.getArr();
+//        double[] arr = flow.fGetArr();
 //        for (int i = 0; i < 900; i++) {
-//            arr = flow.getArr();
+//            arr = flow.fGetArr();
 //        }
 //
 //        for (double i : arr) {
