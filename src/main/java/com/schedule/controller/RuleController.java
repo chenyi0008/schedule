@@ -43,6 +43,10 @@ public class RuleController {
     @PostMapping("/add")
     public R<String> add(@RequestBody Rule rule){
         //如果有相同类型的规则，先删除，再添加
+        if(rule.getRuleType() == null || rule.getValue() == null || rule.getStoreId() == null
+         || rule.getRuleType() == "" || rule.getValue() == "")
+            throw new CustomException("参数不符合要求");
+
         LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Rule::getStoreId,rule.getStoreId());
         queryWrapper.eq(Rule::getRuleType,rule.getRuleType());
@@ -68,7 +72,9 @@ public class RuleController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new CustomException(getExceptionSrintStackTrace(e));
+
+            throw new CustomException("数据存在错误：" + e.getMessage());
+
 
         }
 

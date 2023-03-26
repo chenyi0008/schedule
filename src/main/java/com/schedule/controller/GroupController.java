@@ -123,6 +123,7 @@ public class GroupController {
     @GetMapping("/list")
     public R<List<Staff>> getListByGroupId(Long groupId){
         List<Staff> list = staffGroupService.getListByGroupId(groupId);
+
         return R.success(list);
     }
 

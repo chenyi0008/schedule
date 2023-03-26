@@ -66,9 +66,9 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
         //根据商店id查询员工，再根据员工id查询偏好
 
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        Thread thread1 = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 LambdaQueryWrapper<Staff> staffWrapper = new LambdaQueryWrapper<>();
                 staffWrapper.eq(Staff::getStoreId,storeId);
                 List<Staff> staffList = staffService.list(staffWrapper);
@@ -77,6 +77,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                     staffIds.add(staff.getId());
                 }
                 LambdaQueryWrapper<Preference> preferenceWrapper = new LambdaQueryWrapper<>();
+                if(staffIds.size() == 0)throw new CustomException("此商店的员工数量为0,无法生成排班表");
                 preferenceWrapper.in(Preference::getStaffId,staffIds);
                 List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
 
@@ -101,8 +102,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                     staffWithPre.setPreNum(preNum);
                     map.put(staffId,staffWithPre);
                 }
-            }
-        });
+//            }
+//        });
 
 
         //根据商店id获取商店信息
@@ -129,13 +130,13 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
         long t1 = System.currentTimeMillis();
 
-        thread1.start();
+//        thread1.start();
         thread2.start();
         thread3.start();
         try{
             thread2.join();
             thread3.join();
-            thread1.join();
+//            thread1.join();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -418,6 +419,10 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         Collections.sort(sortedPlan, new Comparator<Plan>() {
             @Override
             public int compare(Plan o1, Plan o2) {
+                o1.getDay();
+                o2.getDay();
+                o1.getShift();
+
                 if(o1.getDay() == o2.getDay())return o1.getShift() - o2.getShift();
                 return o1.getDay() - o2.getDay();
             }
