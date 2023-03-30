@@ -46,3 +46,8 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
       insert-strategy: ignored
+spring:
+  mail:
+    host: smtp.163.com
+    username: chenyikeji0000@163.com
+    password: VJOFLTKZBKIPOUHX
