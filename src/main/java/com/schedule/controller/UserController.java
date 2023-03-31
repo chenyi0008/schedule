@@ -12,9 +12,11 @@ import com.schedule.util.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import javax.servlet.http.HttpSession;
+import java.util.concurrent.TimeUnit;
 
 /**
  * user
@@ -26,6 +28,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 注册
@@ -86,7 +91,7 @@ public class UserController {
         String username = user.getUsername();
         Object codeInSession = session.getAttribute(username);
         if(codeInSession == null || !codeInSession.equals(code))
-        return R.msg("验证码有误");
+        return R.error("您输入的验证码有误");
 
 
         if(username == null || user.getPassword() == null)throw new CustomException("账号和密码不能为空");
@@ -117,6 +122,8 @@ public class UserController {
     public R<String> sendMsg(@RequestBody User user, HttpSession session){
         //获取邮箱号码
         String username = user.getUsername();
+        Long expire = redisTemplate.getExpire(username);
+        if(expire > 0)return R.error("验证码冷却时间为" + expire + "s");
 
         if(StringUtils.isNotEmpty(username)){
             //生成随机的六位验证码
@@ -125,14 +132,19 @@ public class UserController {
             log.info("验证码：{}",code.toString());
             sendMailService.sendMail(user.getUsername(), code);
             session.setAttribute(username,code.toString());
+            redisTemplate.opsForValue().set(username, code);
+            redisTemplate.expire(username, 1, TimeUnit.MINUTES);
             return R.success("验证码发送成功");
         }
         return R.error("验证码发送失败");
     }
 
+
+
     @GetMapping("/info")
     public R<String> loginInfo(){
         return R.error("用户未登录");
+
     }
 
 }

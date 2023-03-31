@@ -13,9 +13,15 @@ import com.schedule.util.CalculateUtil;
 import com.schedule.util.JwtUtil;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
@@ -163,6 +169,17 @@ class ScheduleApplicationTests {
 
 
             /********* End *********/
+    }
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    @Test
+    void redisTest(){
+
+
+
+        redisTemplate.opsForValue().set("chenyi","sdfdsa");
+
 
     }
 }
