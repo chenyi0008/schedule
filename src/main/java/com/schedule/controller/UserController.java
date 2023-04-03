@@ -90,9 +90,10 @@ public class UserController {
         //判断账号是否已存在
         String username = user.getUsername();
         Object codeInSession = session.getAttribute(username);
-        if(codeInSession == null || !codeInSession.equals(code))
-        return R.error("您输入的验证码有误");
 
+        Object s = redisTemplate.opsForValue().get(username);
+        if(s == null || !s.toString().equals(code))
+        return R.error("您输入的验证码有误");
 
         if(username == null || user.getPassword() == null)throw new CustomException("账号和密码不能为空");
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
@@ -119,7 +120,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/sendMsg")
-    public R<String> sendMsg(@RequestBody User user, HttpSession session){
+    public R<String> sendMsg(@RequestBody User user){
         //获取邮箱号码
         String username = user.getUsername();
         Long expire = redisTemplate.getExpire(username);
@@ -131,7 +132,6 @@ public class UserController {
             //发送邮件
             log.info("验证码：{}",code.toString());
             sendMailService.sendMail(user.getUsername(), code);
-            session.setAttribute(username,code.toString());
             redisTemplate.opsForValue().set(username, code);
             redisTemplate.expire(username, 1, TimeUnit.MINUTES);
             return R.success("验证码发送成功");

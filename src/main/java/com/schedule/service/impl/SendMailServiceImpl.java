@@ -19,10 +19,10 @@ public class SendMailServiceImpl implements SendMailService {
         //标题
         String subject = "验证码";
         //正文
-        String context = "您的验证码为：" + code + ",请勿泄露于他人！";
+        String context = "您现在正在进行注册验证，您的验证码为：" + code + ",请勿泄露于他人！";
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from+"(机器人)");
+        message.setFrom(from+"(智能排班系统)");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(context);

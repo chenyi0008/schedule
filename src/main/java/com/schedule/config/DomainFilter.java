@@ -19,7 +19,6 @@ public class DomainFilter implements Filter {
     }
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-
         //修改请求头
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Origin", "*");//ip地址
