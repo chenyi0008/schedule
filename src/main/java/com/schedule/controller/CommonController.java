@@ -1,11 +1,15 @@
 package com.schedule.controller;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import com.schedule.common.BaseContext;
 import com.schedule.common.R;
 import com.schedule.entity.Flow;
+import com.schedule.entity.Store;
 import com.schedule.service.FlowService;
+import com.schedule.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,9 +53,25 @@ public class CommonController {
         }
     }
 
+    @Autowired
+    StoreService storeService;
+
     @PostMapping("/uploadCSV")
-    public R<String> uploadCSVFile(@RequestParam("file") MultipartFile file) {
+    public R<String> uploadCSVFile(@RequestParam("file") MultipartFile file, @RequestParam  Long storeId) {
         List<Flow> flowList=new ArrayList<>();
+        Long userId = BaseContext.getUserId();
+        LambdaQueryWrapper<Store> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Store::getUserId,userId);
+        List<Store> list = storeService.list(wrapper);
+        boolean flag = false;
+        for (Store store : list) {
+            if(store.getId() == storeId){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag)return R.error("权限不足");
+
 
         try {
             // 读取CSV文件数据
@@ -64,23 +84,19 @@ public class CommonController {
                 String tdata = null;
                 String sid = null;
                 String value = null;
-                if(line.length >= 1) {
+                if(line.length >= 2) {
                     tdata = line[0];
                     tdata = convertDate(tdata.substring(1));
-                    System.out.println(tdata);
+                    value = line[1];
                 }
-                if(line.length >= 2) {
-                    sid = line[1];
-                }
-                if(line.length >= 3) {
-                    value = line[2];
-                }
+
                 // 创建flow实体对象，将读取的数据分别赋值给flow对象的三个属性
                 Flow flow=new Flow();
 
                 if(!tdata.equals(null)) flow.setDate(tdata);
                 if(!sid.equals(null))flow.setStoreId((long)Integer.parseInt(sid));
                 if(!value.equals(null))flow.setValue(value);
+                flow.setStoreId(storeId);
                 flowList.add(flow);
             }
             flowservice.saveBatch(flowList);
@@ -92,9 +108,8 @@ public class CommonController {
         } catch (CsvValidationException e) {
             e.printStackTrace();
         }
-//        catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+
+
         return R.error("上传数据失败");
     }
 

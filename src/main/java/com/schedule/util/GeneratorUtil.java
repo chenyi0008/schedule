@@ -76,7 +76,10 @@ public class GeneratorUtil {
 
     public static void main(String[] args) {
 
-
+        List<Flow> flows = RandomGeneration("2023-04-01", 30, 1L);
+        for (Flow flow : flows) {
+            System.out.println(flow.getValue());
+        }
 
     }
 }
