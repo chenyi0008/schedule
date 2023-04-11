@@ -21,7 +21,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author akuya
@@ -49,6 +51,7 @@ public class CommonController {
 
     @PostMapping("/uploadCSV")
     public R<String> uploadCSVFile(@RequestParam("file") MultipartFile file) {
+        List<Flow> flowList=new ArrayList<>();
 
         try {
             // 读取CSV文件数据
@@ -78,9 +81,9 @@ public class CommonController {
                 if(!tdata.equals(null)) flow.setDate(tdata);
                 if(!sid.equals(null))flow.setStoreId((long)Integer.parseInt(sid));
                 if(!value.equals(null))flow.setValue(value);
-                System.out.println(flow.toString());
-                flowservice.save(flow);
+                flowList.add(flow);
             }
+            flowservice.saveBatch(flowList);
             reader.close();
             return R.msg("成功上传数据");
         } catch (IOException e) {
