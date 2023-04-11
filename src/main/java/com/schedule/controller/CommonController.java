@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,13 +34,28 @@ public class CommonController {
     @Autowired
     private FlowService flowservice;
 
+    public static String convertDate(String dateString) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/M/d");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = inputFormat.parse(dateString);
+            String formattedDate = outputFormat.format(date);
+            return formattedDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @PostMapping("/uploadCSV")
     public R<String> uploadCSVFile(@RequestParam("file") MultipartFile file) {
 
         try {
             // 读取CSV文件数据
             InputStream inputStream = file.getInputStream();
-            CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+            CSVReader reader =  new CSVReader(new InputStreamReader(inputStream));
+
+
             String[] line;
             while ((line = reader.readNext()) != null) {
                 String tdata = null;
@@ -46,31 +63,8 @@ public class CommonController {
                 String value = null;
                 if(line.length >= 1) {
                     tdata = line[0];
-                    String temp[]=tdata.split("/");
-                    StringBuffer b=new StringBuffer();
-                    for(int i=0;i<temp.length;i++){
-                        if(i==0){
-                            b.append(temp[i]);
-                            b.append("-");
-                        }
-                        if(i==1){
-                            if(Integer.parseInt(temp[i])<10){
-                                b.append("0");
-                                b.append(temp[i]);
-                                b.append("-");
-                            }
-                        }
-                        if(i==2){
-                            if(Integer.parseInt(temp[i])<10){
-                                b.append("0");
-                                b.append(temp[i]);
-                            }
-                        }
-                    }
-                    tdata=b.toString();
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                    Date td = formatter.parse(tdata);
-                    tdata=td.toString();
+                    tdata = convertDate(tdata.substring(1));
+                    System.out.println(tdata);
                 }
                 if(line.length >= 2) {
                     sid = line[1];
@@ -80,9 +74,11 @@ public class CommonController {
                 }
                 // 创建flow实体对象，将读取的数据分别赋值给flow对象的三个属性
                 Flow flow=new Flow();
+
                 if(!tdata.equals(null)) flow.setDate(tdata);
                 if(!sid.equals(null))flow.setStoreId((long)Integer.parseInt(sid));
                 if(!value.equals(null))flow.setValue(value);
+                System.out.println(flow.toString());
                 flowservice.save(flow);
             }
             reader.close();
@@ -92,9 +88,10 @@ public class CommonController {
             return R.error("上传数据失败");
         } catch (CsvValidationException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
+//        catch (ParseException e) {
+//            e.printStackTrace();
+//        }
         return R.error("上传数据失败");
     }
 
