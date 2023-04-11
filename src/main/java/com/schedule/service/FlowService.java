@@ -10,4 +10,5 @@ public interface FlowService extends IService<Flow> {
 
     public List<Plan> calculate(Long storeId, String startDate, String endDate);
 
+
 }
