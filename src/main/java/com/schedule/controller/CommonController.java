@@ -90,11 +90,12 @@ public class CommonController {
                     value = line[1];
                 }
 
+
                 // 创建flow实体对象，将读取的数据分别赋值给flow对象的三个属性
                 Flow flow=new Flow();
 
                 if(!tdata.equals(null)) flow.setDate(tdata);
-                if(!sid.equals(null))flow.setStoreId((long)Integer.parseInt(sid));
+                if(!storeId.equals(null))flow.setStoreId(storeId);
                 if(!value.equals(null))flow.setValue(value);
                 flow.setStoreId(storeId);
                 flowList.add(flow);
