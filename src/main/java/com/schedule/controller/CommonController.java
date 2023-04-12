@@ -80,13 +80,23 @@ public class CommonController {
 
 
             String[] line;
+            flag = false;
             while ((line = reader.readNext()) != null) {
                 String tdata = null;
                 String value = null;
                 if(line.length >= 2) {
                     tdata = line[0];
-                    tdata = convertDate(tdata.substring(1));
+                    if(flag){
+                        tdata = convertDate(tdata);
+
+                    }else{
+                        tdata = convertDate(tdata.substring(1));
+                        flag = true;
+                    }
+
                     value = line[1];
+                    String[] split = value.split(",");
+                    if(split.length != 48)return R.error("value的值不符合要求");
                 }
 
 
@@ -99,8 +109,24 @@ public class CommonController {
                 flow.setStoreId(storeId);
                 flowList.add(flow);
             }
+
+            Flow f1 = flowList.get(0);
+            String startDate = f1.getDate();
+            Flow f2 = flowList.get(flowList.size() - 1);
+            String endDate = f2.getDate();
+            LambdaQueryWrapper<Flow> removeWrapper = new LambdaQueryWrapper<>();
+            removeWrapper.ge(Flow::getDate, startDate).le(Flow::getDate, endDate);
+            flowservice.remove(removeWrapper);
+
             flowservice.saveBatch(flowList);
+
             reader.close();
+
+
+
+
+
+
             return R.msg("成功上传数据");
         } catch (IOException e) {
             e.printStackTrace();
