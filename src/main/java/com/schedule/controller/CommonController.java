@@ -82,7 +82,6 @@ public class CommonController {
             String[] line;
             while ((line = reader.readNext()) != null) {
                 String tdata = null;
-                String sid = null;
                 String value = null;
                 if(line.length >= 2) {
                     tdata = line[0];
