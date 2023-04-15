@@ -11,10 +11,7 @@ import com.schedule.entity.Store;
 import com.schedule.service.FlowService;
 import com.schedule.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -65,7 +62,11 @@ public class CommonController {
         List<Store> list = storeService.list(wrapper);
         boolean flag = false;
         for (Store store : list) {
-            if(store.getId() == storeId){
+
+            System.out.println("---------------");
+            System.out.println(store.getId());
+            System.out.println(storeId);
+            if(store.getId().equals(storeId) ){
                 flag = true;
                 break;
             }

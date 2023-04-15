@@ -30,6 +30,13 @@ public class PlanWithStaff {
 
     private Integer workTime;
 
+
+    @TableField(exist = false)
+    private String role;
+
+    @TableField(exist = false)
+    private String groupName;
+
     @TableField(exist = false)
     private boolean flag=false;
 }

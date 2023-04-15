@@ -78,6 +78,7 @@ public class RuleController {
         }
 
         ruleService.remove(queryWrapper);
+        System.out.println(rule.toString());
         ruleService.save(rule);
         return R.msg("添加成功");
     }

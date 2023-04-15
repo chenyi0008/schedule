@@ -191,11 +191,23 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 case "关店规则" : double[] sarr =rule.fGetArr(); n2=sarr[0]; j2=sarr[1];k2=sarr[2]; break;
                 case "客流规则" : double[] tarr =rule.fGetArr(); k3=tarr[0];  break;
                 case "值班规则" : double[] foarr =rule.fGetArr(); n4=foarr[0]; break;
-                case "职位规则" : String [] fiarr=rule.getValue().split("|");
+                case "职位规则" : String [] fiarr=rule.getValue().split("[|]");
                                  ffarr= new String[3][];
                                  ffarr[0]=fiarr[0].split(",");
                                  ffarr[1]=fiarr[1].split(",");
                                  ffarr[2]=fiarr[2].split(",");
+                    System.out.println("**********************************");
+                    System.out.println(rule.getValue());
+
+
+
+                    for (int i = 0; i < 3; i++) {
+                        for (String s : ffarr[i]) {
+                            System.out.print(s);
+                        }
+                        System.out.println();
+                    }
+                    System.out.println("******************************");
                                  break;
                 case "休息规则" : relax = Integer.parseInt(rule.getValue());
             }
@@ -256,6 +268,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                     Boolean workTypeFlag = false;
                     String[] job = unit.getJob();
                     for (String s : job) {
+//                        System.out.println("********"  );
+//                        System.out.println(s);
                         if(s.equals(staff.getRole())) workTypeFlag = true;
                     }
 
@@ -436,24 +450,24 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         System.out.print("已成功排班比例：");
         System.out.println(total * 1.0 / sortedPlan.size());
 
-//        for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
-//
-//            System.out.print("员工姓名：");
-//            System.out.println(entry.getValue().getName());
-//            System.out.print("每天剩余时间：");
-//            for (int i : entry.getValue().getDayWorkTime()) {
-//                System.out.print(i + ",");
-//            }
-//            System.out.println();
-//            System.out.print("每周剩余时间：");
-//            for (int i : entry.getValue().getWeekWorkTime()) {
-//                System.out.print(i + ",");
-//            }
-//            System.out.println();
-//            System.out.print("对应班次数量：");
-//            System.out.println(entry.getValue().getNum());
-//            System.out.println();
-//        }
+        for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
+
+            System.out.print("员工姓名：");
+            System.out.println(entry.getValue().getName());
+            System.out.print("每天剩余时间：");
+            for (int i : entry.getValue().getDayWorkTime()) {
+                System.out.print(i + ",");
+            }
+            System.out.println();
+            System.out.print("每周剩余时间：");
+            for (int i : entry.getValue().getWeekWorkTime()) {
+                System.out.print(i + ",");
+            }
+            System.out.println();
+            System.out.print("对应班次数量：");
+            System.out.println(entry.getValue().getNum());
+            System.out.println();
+        }
         long t4 = System.currentTimeMillis();
         System.out.println("计算所耗时间：" + (t4 - t3) + "ms");
         return sortedPlan;

@@ -73,4 +73,7 @@ spring:
     host: smtp.163.com
     username: chenyikeji0000@163.com
     password: VJOFLTKZBKIPOUHX
-
+  servlet:
+    multipart:
+      max-file-size: 10MB # 设置单个文件的大小为10M
+      max-request-size: 50MB # 设置总上传的数据大小为50M

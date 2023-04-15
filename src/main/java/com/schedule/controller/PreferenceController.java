@@ -27,6 +27,7 @@ public class PreferenceController {
      * 添加员工偏好
      * @param preference
      */
+    @CrossOrigin
     @PostMapping("/add")
     public R<String> add(@RequestBody Preference preference){
         String preferenceType = preference.getPreferenceType();
@@ -74,15 +75,18 @@ public class PreferenceController {
      */
     @GetMapping("/{id}")
     public R<List<Preference>> get(@PathVariable Long id) {
-        List<Preference> list = preferenceService.list();
-        List<Preference> list2 =new ArrayList<>();
-        for(Preference p:list){
-            if(id==p.getStaffId()){
-                list2.add(p);
-            }
-        }
+        LambdaQueryWrapper<Preference> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Preference::getStaffId, id);
 
-        return R.success(list2);
+        List<Preference> list = preferenceService.list(wrapper);
+//        List<Preference> list2 =new ArrayList<>();
+//        for(Preference p:list){
+//            if(id==p.getStaffId()){
+//                list2.add(p);
+//            }
+//        }
+
+        return R.success(list);
     }
 
     /**

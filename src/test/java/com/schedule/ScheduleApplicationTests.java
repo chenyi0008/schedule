@@ -1,35 +1,24 @@
 package com.schedule;
 
-import com.alibaba.druid.sql.visitor.functions.Char;
 import com.schedule.common.R;
 import com.schedule.controller.FlowController;
 import com.schedule.entity.Staff;
 import com.schedule.entity.Flow;
+import com.schedule.mapper.PlanMapper;
 import com.schedule.mapper.StaffGroupMapper;
 import com.schedule.mapper.StaffMapper;
 import com.schedule.service.FlowService;
 import com.schedule.service.StaffService;
-import com.schedule.util.CalculateUtil;
+import com.schedule.util.Information;
 import com.schedule.util.JwtUtil;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Stack;
 
-import static com.schedule.util.CalculateUtil.f;
 import static com.schedule.util.GeneratorUtil.RandomGeneration;
 
 @SpringBootTest
@@ -84,10 +73,13 @@ class ScheduleApplicationTests {
 
     @Autowired
     FlowService flowService;
-//    @Test
+    @Test
     void test4(){
-        List<Flow> flows = RandomGeneration("2000-01-01", 30, 1L);
-        flowService.saveBatch(flows);
+        List<Flow> flows = RandomGeneration("2023-04-14", 30, 1645395272186007554L);
+        for (Flow flow : flows) {
+            System.out.println(flow.getValue());
+        }
+//        flowService.saveBatch(flows);
 
     }
 
@@ -182,4 +174,17 @@ class ScheduleApplicationTests {
 
 
     }
+
+
+    @Autowired
+    PlanMapper planMapper;
+
+    @Test
+    void test11(){
+        List<Information> information = planMapper.getInformation(1L);
+        for (Information imformation : information) {
+            System.out.println(imformation);
+        }
+    }
+
 }

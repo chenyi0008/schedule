@@ -1,13 +1,14 @@
 package com.schedule.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.schedule.common.BaseContext;
 import com.schedule.common.R;
-import com.schedule.entity.Plan;
-import com.schedule.entity.PlanWithStaff;
-import com.schedule.entity.Staff;
-import com.schedule.entity.StaffWithPre;
+import com.schedule.entity.*;
 import com.schedule.service.FlowService;
+import com.schedule.service.GroupService;
 import com.schedule.service.PlanService;
+import com.schedule.service.StaffGroupService;
+import com.schedule.util.Information;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.util.LambdaSafe;
 import org.springframework.web.bind.annotation.*;
@@ -85,8 +86,36 @@ public class PlanController {
                 p.setFlag(true);
             }
         }
+
+        List<Information> informationList = planService.getInformation(storeId);
+
+        for (Information information : informationList) {
+            System.out.println(information);
+        }
+        for (int i = 0; i < list.size(); i ++) {
+
+            for (Information information : informationList) {
+                PlanWithStaff planStaff = list.get(i);
+                if(planStaff.getStaffId() != null && planStaff.getStaffId().equals(information.getStaId())){
+                    PlanWithStaff planWithStaff = list.get(i);
+                    planWithStaff.setRole(information.getRole());
+                    planWithStaff.setGroupName(information.getGroupName());
+                }
+
+            }
+
+        }
+
+
         return R.success(list);
     }
+
+
+    @Autowired
+    GroupService groupService;
+
+    @Autowired
+    StaffGroupService staffGroupService;
 
     /**
      * 生成排班表
@@ -149,6 +178,33 @@ public class PlanController {
 
         System.out.println("存数据所耗时间：" + (t2 - t3) + "ms");
         System.out.println("总所耗时间：" + (t2 - t1) + "ms");
+
+
+
+
+        //添加小组类型
+//        LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
+//        Long userId = BaseContext.getUserId();
+//        wrapper.eq(Group::getUserId, userId);
+//        List<Group> groups = groupService.list(wrapper);
+
+//        List<Information> informationList = planService.getInformation(storeId);
+//        for (int i = 0; i < planWithStaffList.size(); i ++) {
+//
+//            for (Information information : informationList) {
+//
+//                if(planWithStaffList.get(i).getStaffId().equals(information.getStaId())){
+//                    PlanWithStaff planWithStaff = planWithStaffList.get(i);
+//                    planWithStaff.setRole(information.getRole());
+//                    planWithStaff.setGroupName(information.getGroupName());
+//                }
+//
+//            }
+//
+//        }
+
+
+
         return R.success(planWithStaffList);
    }
 
