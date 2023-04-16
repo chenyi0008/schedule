@@ -79,6 +79,9 @@ public class FlowController {
     @DeleteMapping("/date")
     public R<String> deleteByDate(@RequestParam Long storeId,@RequestParam String startDate,@RequestParam String endDate){
         LambdaQueryWrapper<Flow> wrapper = new LambdaQueryWrapper<>();
+
+
+
         wrapper.ge(Flow::getDate,startDate)
                 .le(Flow::getDate,endDate)
                 .eq(Flow::getStoreId,storeId);
@@ -86,6 +89,8 @@ public class FlowController {
         flowService.remove(wrapper);
         return R.msg("删除成功");
     }
+
+
 
     /**
      * 条件查询

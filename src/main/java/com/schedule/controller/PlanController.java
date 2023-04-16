@@ -32,6 +32,43 @@ public class PlanController {
     @Autowired
     private FlowService flowService;
 
+    public static int calculateHourDifference(String input) {
+        //分割字符串，得到开始时间和结束时间
+        String[] times = input.split("--");
+        String startTime = times[0];
+        String endTime = times[1];
+
+        //将时间转换为小时数
+        int startHours = convertToHours(startTime);
+        int endHours = convertToHours(endTime);
+
+        //计算小时差
+        int hourDifference = endHours - startHours;
+
+        //返回小时差
+        return hourDifference;
+    }
+
+    public static int convertToHours(String time) {
+        //分割时间，得到小时
+        String[] parts = time.split(":");
+        int hour = Integer.parseInt(parts[0]);
+
+        //返回小时数
+        return hour;
+    }
+
+    public static int getStartHour(String input) {
+        //分割字符串，得到开始时间
+        String[] times = input.split("-");
+        String startTime = times[0];
+
+        //将时间转换为小时数
+        int startHour = convertToHours(startTime);
+
+        //返回开始时间的小时数
+        return startHour;
+    }
     /**
      * 添加数据
      * @param planWithStaff
@@ -39,8 +76,18 @@ public class PlanController {
      */
     @PostMapping
     public R<String> add(@RequestBody PlanWithStaff planWithStaff){
+
+
+        System.out.println(planWithStaff.toString());
+        int workTime = calculateHourDifference(planWithStaff.getTime());
+        planWithStaff.setWorkTime(workTime);
+        planWithStaff.setStartTime(getStartHour(planWithStaff.getTime()));
+
         planService.save(planWithStaff);
+
+        System.out.println("添加成功!@!!!!!!!!!!!!!");
         return R.msg("添加成功");
+
     }
 
     /**
@@ -61,6 +108,8 @@ public class PlanController {
      */
     @PutMapping
     public R<String> update(@RequestBody PlanWithStaff planWithStaff){
+
+
         planService.updateById(planWithStaff);
         return R.msg("修改成功");
     }
@@ -82,7 +131,7 @@ public class PlanController {
         for(PlanWithStaff p:list){
             int start=p.getStartTime();
             int end=start+p.getWorkTime();
-            if((start>=11&&start<=14)||(end>=11&&end<=14)||(start>=17&&start<=20)||(end>=17&&end<=20)){
+            if((start<=11&&end>=14)||(start<=17&&end>=20)){
                 p.setFlag(true);
             }
         }

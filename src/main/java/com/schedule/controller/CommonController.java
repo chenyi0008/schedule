@@ -116,7 +116,7 @@ public class CommonController {
             Flow f2 = flowList.get(flowList.size() - 1);
             String endDate = f2.getDate();
             LambdaQueryWrapper<Flow> removeWrapper = new LambdaQueryWrapper<>();
-            removeWrapper.ge(Flow::getDate, startDate).le(Flow::getDate, endDate);
+            removeWrapper.ge(Flow::getDate, startDate).le(Flow::getDate, endDate).eq(Flow::getStoreId, storeId);
             flowservice.remove(removeWrapper);
 
             flowservice.saveBatch(flowList);
