@@ -33,10 +33,12 @@ public class CalculateUtil {
             //开店准备工作加入栈
             if(job == null)
                 for (int i = 0; i < openNum; i++) {
+                    System.out.println("job = null");
                     stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作", week));
                 }
             else
                 for (int i = 0; i < openNum; i++) {
+                    System.out.println("job != null");
                     stack.push(new Plan(time - n1, Math.max(n1, 2), f.getDate(), "准备工作", job[0], week));
                 }
 
@@ -97,6 +99,7 @@ public class CalculateUtil {
 
             List<Plan> list = new ArrayList<>(stack);
             res.add(list);
+            week = (week + 1) % 7;
         }
         return res;
     }

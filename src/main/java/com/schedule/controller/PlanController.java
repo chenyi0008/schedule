@@ -78,14 +78,12 @@ public class PlanController {
     public R<String> add(@RequestBody PlanWithStaff planWithStaff){
 
 
-        System.out.println(planWithStaff.toString());
         int workTime = calculateHourDifference(planWithStaff.getTime());
         planWithStaff.setWorkTime(workTime);
         planWithStaff.setStartTime(getStartHour(planWithStaff.getTime()));
 
         planService.save(planWithStaff);
 
-        System.out.println("添加成功!@!!!!!!!!!!!!!");
         return R.msg("添加成功");
 
     }
@@ -138,9 +136,9 @@ public class PlanController {
 
         List<Information> informationList = planService.getInformation(storeId);
 
-        for (Information information : informationList) {
-            System.out.println(information);
-        }
+//        for (Information information : informationList) {
+//            System.out.println(information);
+//        }
         for (int i = 0; i < list.size(); i ++) {
 
             for (Information information : informationList) {

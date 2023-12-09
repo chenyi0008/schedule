@@ -34,6 +34,7 @@ public class LoginCheckFilter implements Filter {
 
 
 
+
         //获取本次请求的URL
         String requestURI = request.getRequestURI();
         log.info("拦截到请求:{}",request.getRequestURI());

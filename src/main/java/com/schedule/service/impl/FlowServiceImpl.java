@@ -72,6 +72,11 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 LambdaQueryWrapper<Staff> staffWrapper = new LambdaQueryWrapper<>();
                 staffWrapper.eq(Staff::getStoreId,storeId);
                 List<Staff> staffList = staffService.list(staffWrapper);
+        System.out.println("*************************");
+        for (Staff staff : staffList) {
+            System.out.println(staff.getName());
+        }
+        System.out.println("*************************");
                 List<Long> staffIds = new ArrayList<>();
                 for (Staff staff : staffList) {
                     staffIds.add(staff.getId());
@@ -80,6 +85,8 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                 if(staffIds.size() == 0)throw new CustomException("此商店的员工数量为0,无法生成排班表");
                 preferenceWrapper.in(Preference::getStaffId,staffIds);
                 List<Preference> preferenceList = preferenceService.list(preferenceWrapper);
+
+
 
                 //把偏好和员工进行捆绑
 
@@ -101,6 +108,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                     }
                     staffWithPre.setPreNum(preNum);
                     map.put(staffId,staffWithPre);
+
                 }
 //            }
 //        });
@@ -236,14 +244,26 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
             for (Plan unit : plan) {
                 List<StaffWithPre> list = new ArrayList<>();
                 for (Map.Entry<Long, StaffWithPre> entry : map.entrySet()) {
-//                    System.out.println(entry.getValue());
+//
+//                  System.out.println(entry.getValue());
                     StaffWithPre staff = entry.getValue();
+                    System.out.println(staff.getName());
+
+
                     unit.setDay(day);
                     unit.setShift(shift);
                     //判断工作日偏好
                     Boolean weekDayFlag = false;
                     if(staff.getDayPre() != null){
                         int[] arrD = staff.getArrD();
+                        System.out.println(staff.getName());
+                        for (int i : arrD) {
+                            System.out.print(i + " ");
+
+                        }
+                        System.out.println("getweekday" + unit.getWeekDay());
+
+                        System.out.println();
                         for (int i : arrD) {
                             if(i == unit.getWeekDay())weekDayFlag = true;
                         }
@@ -268,8 +288,6 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
                     Boolean workTypeFlag = false;
                     String[] job = unit.getJob();
                     for (String s : job) {
-//                        System.out.println("********"  );
-//                        System.out.println(s);
                         if(s.equals(staff.getRole())) workTypeFlag = true;
                     }
 
@@ -454,6 +472,7 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
 
             System.out.print("员工姓名：");
             System.out.println(entry.getValue().getName());
+
             System.out.print("每天剩余时间：");
             for (int i : entry.getValue().getDayWorkTime()) {
                 System.out.print(i + ",");
@@ -470,6 +489,12 @@ public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements Fl
         }
         long t4 = System.currentTimeMillis();
         System.out.println("计算所耗时间：" + (t4 - t3) + "ms");
+
+        System.out.println("dfasdfdsafasd");
+        for (Plan plan : sortedPlan) {
+            System.out.println(plan.getStaff());
+        }
+
         return sortedPlan;
 
     }
